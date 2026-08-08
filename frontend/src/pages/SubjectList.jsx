@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ChevronRight, FileText, Loader2, BookMarked, ArrowLeft } from 'lucide-react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import { API_BASE_URL } from '../apiConfig';
 
 const subjectColors = [
   { bg: 'bg-sky-50/80', border: 'border-sky-200', accent: 'text-sky-600', badge: 'bg-sky-100 text-sky-700' },
@@ -43,8 +44,8 @@ export default function SubjectList() {
     const fetchData = async () => {
       try {
         const [subjectsRes, semesterRes] = await Promise.all([
-          axios.get(`http://localhost:5000/api/subjects/semester/${semesterId}`).catch(() => null),
-          axios.get(`http://localhost:5000/api/semesters/${semesterId}`).catch(() => null)
+          axios.get(`${API_BASE_URL}/subjects/semester/${semesterId}`).catch(() => null),
+          axios.get(`${API_BASE_URL}/semesters/${semesterId}`).catch(() => null)
         ]);
 
         if (subjectsRes?.data && subjectsRes.data.length > 0) {

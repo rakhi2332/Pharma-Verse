@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import { API_BASE_URL } from '../apiConfig';
 
 export default function DailyChallenges() {
   const [activeTab, setActiveTab] = useState('challenge'); // 'challenge' | 'leaderboard'
@@ -27,10 +28,10 @@ export default function DailyChallenges() {
     setLoading(true);
     setError('');
     try {
-      const challengeRes = await axios.get('http://localhost:5000/api/challenges/today');
+      const challengeRes = await axios.get(`${API_BASE_URL}/challenges/today`);
       setChallenge(challengeRes.data);
 
-      const leaderRes = await axios.get('http://localhost:5000/api/challenges/leaderboard');
+      const leaderRes = await axios.get(`${API_BASE_URL}/challenges/leaderboard`);
       setLeaderboard(leaderRes.data);
     } catch (err) {
       console.error(err);
@@ -64,7 +65,7 @@ export default function DailyChallenges() {
     if (studentCollege) localStorage.setItem('studentCollege', studentCollege);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/challenges/submit', {
+      const response = await axios.post(`${API_BASE_URL}/challenges/submit`, {
         challengeId: challenge._id,
         answers: userAnswers,
         studentName: nameToUse,
@@ -75,7 +76,7 @@ export default function DailyChallenges() {
       setSubmissionResult(response.data);
 
       // Refresh leaderboard after submission
-      const leaderRes = await axios.get('http://localhost:5000/api/challenges/leaderboard');
+      const leaderRes = await axios.get(`${API_BASE_URL}/challenges/leaderboard`);
       setLeaderboard(leaderRes.data);
     } catch (err) {
       console.error(err);

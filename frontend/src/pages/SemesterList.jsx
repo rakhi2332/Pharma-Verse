@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { BookOpen, ChevronRight, GraduationCap, Loader2, Search, X } from 'lucide-react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import { API_BASE_URL } from '../apiConfig';
 
 const semesterColors = [
   { bg: 'bg-blue-50', border: 'border-blue-200', icon: 'text-blue-500', shadow: 'shadow-blue-200/50', gradient: 'from-blue-500 to-blue-600' },
@@ -41,7 +42,7 @@ export default function SemesterList() {
   useEffect(() => {
     const fetchSemesters = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/semesters');
+        const res = await axios.get(`${API_BASE_URL}/semesters`);
         if (res.data && res.data.length > 0) {
           setSemesters(res.data);
           setLoading(false);

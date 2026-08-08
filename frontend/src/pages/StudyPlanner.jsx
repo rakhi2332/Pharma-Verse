@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import { API_BASE_URL } from '../apiConfig';
 
 const SUBJECT_OPTIONS = [
   'Pharmacology', 'Medicinal Chemistry', 'Pharmaceutics', 
@@ -39,7 +40,7 @@ export default function StudyPlanner() {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/study-planner/generate', {
+      const response = await axios.post(`${API_BASE_URL}/study-planner/generate`, {
         goal,
         semesterNumber,
         hoursPerDay,

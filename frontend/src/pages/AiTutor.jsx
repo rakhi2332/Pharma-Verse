@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import Navbar from '../components/Navbar';
+import { API_BASE_URL } from '../apiConfig';
 import { 
   Brain, Send, Sparkles, RefreshCw, Bot, User, ChevronRight, 
   Volume2, VolumeX, Bookmark, Copy, Check, Calculator, 
@@ -266,7 +267,7 @@ Choose a mode above: **Concept Tutor**, **GPAT MCQ Quiz**, **Mnemonics**, or **D
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/ai-tutor/ask', {
+      const res = await axios.post(`${API_BASE_URL}/ai-tutor/ask`, {
         question: textToSend,
         category: activeCategory !== 'All' ? activeCategory : undefined,
         difficulty: difficultyLevel

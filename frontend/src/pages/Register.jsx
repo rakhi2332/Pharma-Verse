@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import Navbar from '../components/Navbar';
+import { API_BASE_URL } from '../apiConfig';
 import { Link, useNavigate } from 'react-router-dom';
 import { Pill, Mail, Lock, User, Sparkles } from 'lucide-react';
 import axios from 'axios';
@@ -38,8 +40,7 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-      const res = await axios.post(`${API_URL}/auth/register`, {
+      const res = await axios.post(`${API_BASE_URL}/auth/register`, {
         name,
         email,
         password

@@ -20,5 +20,3 @@ timeout /t 5 /nobreak >nul
 echo.
 echo Opening browser to http://localhost:5173/login ...
 start http://localhost:5173/login
-
-exit

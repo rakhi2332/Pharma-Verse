@@ -35,6 +35,7 @@ app.use('/api/drug-interaction', drugInteractionRoutes);
 app.use('/api/challenges', challengesRoutes);
 app.use('/api/disease-maps', diseaseMapsRoutes);
 app.use('/api/medicine-scanner', medicineScannerRoutes);
+app.use('/api/pill-scanner', medicineScannerRoutes);
 app.use('/api/study-planner', studyPlannerRoutes);
 
 // Basic Route for testing
@@ -84,3 +85,4 @@ async function connectDB() {
 
 connectDB();
 
+module.exports = app;

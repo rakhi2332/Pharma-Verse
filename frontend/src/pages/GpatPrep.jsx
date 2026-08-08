@@ -6,6 +6,7 @@ import {
   Clock, RotateCcw, ArrowRight, Sparkles, Filter, Copy, Check, Search, Loader2 
 } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL } from '../apiConfig';
 
 export default function GpatPrep() {
   const [activeTab, setActiveTab] = useState('practice'); // 'practice' | 'mock' | 'notes'
@@ -52,8 +53,8 @@ export default function GpatPrep() {
     setLoading(true);
     try {
       const [subRes, notesRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/gpat/subjects'),
-        axios.get('http://localhost:5000/api/gpat/notes')
+        axios.get(`${API_BASE_URL}/gpat/subjects`),
+        axios.get(`${API_BASE_URL}/gpat/notes`)
       ]);
       setSubjects(subRes.data.subjects || []);
       setNotes(notesRes.data.notes || []);
@@ -66,7 +67,7 @@ export default function GpatPrep() {
 
   const fetchMcqs = async (subject) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/gpat/mcqs?subject=${subject}`);
+      const res = await axios.get(`${API_BASE_URL}/gpat/mcqs?subject=${subject}`);
       setMcqs(res.data.mcqs || []);
     } catch (err) {
       console.error('Failed to fetch MCQs:', err);
@@ -100,7 +101,7 @@ export default function GpatPrep() {
     }));
 
     try {
-      const res = await axios.post('http://localhost:5000/api/gpat/submit', {
+      const res = await axios.post(`${API_BASE_URL}/gpat/submit`, {
         answers: answersPayload
       });
       setTestResult(res.data);

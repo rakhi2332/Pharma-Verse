@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import { API_BASE_URL } from '../apiConfig';
 
 const PRESET_PAIRINGS = [
   { name: 'Aspirin + Warfarin', drugs: ['Aspirin', 'Warfarin'], tag: 'Bleeding Risk' },
@@ -62,7 +63,7 @@ export default function DrugInteraction() {
     setResult(null);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/drug-interaction/check', {
+      const response = await axios.post(`${API_BASE_URL}/drug-interaction/check`, {
         drugs: selectedDrugs
       });
       setResult(response.data);

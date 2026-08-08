@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import { API_BASE_URL } from '../apiConfig';
 
 export default function DiseaseMaps() {
   const [maps, setMaps] = useState([]);
@@ -25,7 +26,7 @@ export default function DiseaseMaps() {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get('http://localhost:5000/api/disease-maps');
+      const response = await axios.get(`${API_BASE_URL}/disease-maps`);
       setMaps(response.data);
       if (response.data.length > 0) {
         setSelectedMap(response.data[0]);

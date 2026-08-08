@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import { API_BASE_URL } from '../apiConfig';
 import Hap1OriginalPdfViewer from '../components/Hap1OriginalPdfViewer';
 import Hap1Unit2PdfViewer from '../components/Hap1Unit2PdfViewer';
 import Hap1Unit3PdfViewer from '../components/Hap1Unit3PdfViewer';
@@ -307,8 +308,8 @@ export default function ContentView() {
     const fetchData = async () => {
       try {
         const [contentRes, subjectRes] = await Promise.all([
-          axios.get(`http://localhost:5000/api/content/subject/${subjectId}`).catch(() => ({ data: [] })),
-          axios.get(`http://localhost:5000/api/subjects/${subjectId}`).catch(() => null)
+          axios.get(`${API_BASE_URL}/content/subject/${subjectId}`).catch(() => ({ data: [] })),
+          axios.get(`${API_BASE_URL}/subjects/${subjectId}`).catch(() => null)
         ]);
 
         setContent(contentRes.data || []);
@@ -316,16 +317,16 @@ export default function ContentView() {
         if (subjectRes?.data) {
           setSubject(subjectRes.data);
           if (subjectRes.data.semester) {
-            const semRes = await axios.get(`http://localhost:5000/api/semesters/${subjectRes.data.semester}`).catch(() => null);
+            const semRes = await axios.get(`${API_BASE_URL}/semesters/${subjectRes.data.semester}`).catch(() => null);
             if (semRes?.data) setSemester(semRes.data);
           }
         } else {
           // Fallback search across all semesters
-          const semestersRes = await axios.get('http://localhost:5000/api/semesters').catch(() => ({ data: [] }));
+          const semestersRes = await axios.get(`${API_BASE_URL}/semesters`).catch(() => ({ data: [] }));
           const allSemesters = semestersRes.data || [];
 
           for (const sem of allSemesters) {
-            const subjectsRes = await axios.get(`http://localhost:5000/api/subjects/semester/${sem._id}`).catch(() => ({ data: [] }));
+            const subjectsRes = await axios.get(`${API_BASE_URL}/subjects/semester/${sem._id}`).catch(() => ({ data: [] }));
             const found = (subjectsRes.data || []).find(s => s._id === subjectId);
             if (found) {
               setSubject(found);

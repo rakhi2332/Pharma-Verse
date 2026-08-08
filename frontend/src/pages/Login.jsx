@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Pill, Mail, Lock } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL } from '../apiConfig';
 import { useDispatch } from 'react-redux';
 import { login } from '../store/authSlice';
 
@@ -23,8 +24,7 @@ export default function Login() {
         throw new Error('Please fill in all fields');
       }
       
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-      const res = await axios.post(`${API_URL}/auth/login`, { email, password }).catch((err) => {
+      const res = await axios.post(`${API_BASE_URL}/auth/login`, { email, password }).catch((err) => {
         // If backend API is offline or unreachable (e.g. on mobile Vercel), perform smooth client auth!
         if (err.message === 'Network Error' || !err.response) {
           const userName = email.split('@')[0];
