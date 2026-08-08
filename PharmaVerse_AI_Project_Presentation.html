@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PharmaVerse AI — Project Presentation Slide Deck</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+    
+    body {
+      background-color: #0b0f19;
+      color: #f1f5f9;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+    .font-mono-code { font-family: 'JetBrains Mono', monospace; }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(51, 65, 85, 0.7);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .slide { display: none; }
+    .slide.active { display: flex; animation: fadeIn 0.4s ease-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media print {
+      .no-print { display: none !important; }
+      .slide { display: flex !important; page-break-after: always; min-height: 100vh; margin-bottom: 2rem; }
+      body { background: white; color: black; }
+      .glass-card { background: white; border: 1px solid #ccc; color: black; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 md:p-8">
+
+  <!-- TOP PRESENTATION CONTROLS BAR -->
+  <header class="no-print max-w-6xl w-full mx-auto glass-card p-4 rounded-2xl flex items-center justify-between gap-4 mb-6 flex-wrap">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-white text-xl shadow-lg shadow-cyan-500/20">
+        <i class="fa-solid fa-pills"></i>
+      </div>
+      <div>
+        <h1 class="text-base font-bold text-white tracking-wide">PharmaVerse AI Presentation Deck</h1>
+        <p class="text-xs text-slate-400">10-Slide Project Overview & Architecture</p>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="flex items-center gap-3 ml-auto flex-wrap">
+      <span id="slideCounter" class="text-xs font-mono font-bold bg-slate-800 text-cyan-400 px-3 py-1.5 rounded-xl border border-slate-700">
+        Slide 1 of 10
+      </span>
+
+      <!-- SLIDE OVERVIEW GRID BUTTON -->
+      <button onclick="toggleOverviewModal()" class="px-3.5 py-1.5 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 font-bold text-xs rounded-xl flex items-center gap-1.5 transition-all border border-cyan-800 shadow-sm">
+        <i class="fa-solid fa-table-cells"></i> Slide Overview
+      </button>
+
+      <button onclick="prevSlide()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition-all border border-slate-700">
+        <i class="fa-solid fa-chevron-left"></i> Previous
+      </button>
+
+      <button onclick="nextSlide()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition-all shadow-md">
+        Next <i class="fa-solid fa-chevron-right"></i>
+      </button>
+
+      <button onclick="window.print()" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition-all shadow-md">
+        <i class="fa-solid fa-file-pdf"></i> Print / Save PDF
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN SLIDES CONTAINER -->
+  <main class="max-w-6xl w-full mx-auto flex-1 flex flex-col justify-center">
+
+    <!-- SLIDE 1: TITLE SLIDE -->
+    <div class="slide active glass-card p-8 md:p-14 rounded-3xl flex-col justify-between min-h-[580px] border-cyan-500/30 relative overflow-hidden">
+      <div class="absolute -right-20 -top-20 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl"></div>
+      <div class="space-y-6 relative z-10">
+        <span class="text-xs font-extrabold uppercase tracking-widest bg-cyan-950 text-cyan-400 border border-cyan-800 px-3.5 py-1.5 rounded-full inline-block">
+          <i class="fa-solid fa-graduation-cap"></i> B.Pharmacy PCI Curriculum AI Ecosystem
+        </span>
+
+        <h1 class="text-4xl md:text-6xl font-black text-white leading-tight">
+          PharmaVerse AI
+        </h1>
+        <p class="text-xl md:text-2xl font-semibold gradient-text">
+          Next-Generation B.Pharmacy AI Learning & Clinical Intelligence Platform
+        </p>
+
+        <p class="text-slate-300 text-sm md:text-base max-w-3xl leading-relaxed">
+          An end-to-end intelligent web platform designed for B.Pharmacy students and faculty. Features 8 Semester PCI Curriculum coverage (42 Subjects), AI Medicine & Pill Scanner Pro with ADME pharmacokinetics, AI Tutor, and 1-Click Unit PDF Download Engine.
+        </p>
+      </div>
+
+      <div class="pt-8 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono flex-wrap gap-4 relative z-10">
+        <div>Project Domain: <strong>Pharmaceutical AI & EdTech</strong></div>
+        <div>Standard: <strong>PCI Syllabus (Sem 1 to Sem 8)</strong></div>
+        <div>Status: <strong>Fully Production Ready</strong></div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: EXECUTIVE SUMMARY & VISION -->
+    <div class="slide glass-card p-8 md:p-12 rounded-3xl flex-col justify-between min-h-[580px]">
+      <div class="space-y-6">
+        <span class="text-xs font-extrabold uppercase tracking-widest bg-indigo-950 text-indigo-400 border border-indigo-800 px-3.5 py-1.5 rounded-full inline-block">
+          <i class="fa-solid fa-bullseye"></i> Executive Summary
+        </span>
+
+        <h2 class="text-3xl font-bold text-white">Project Vision & Core Value Proposition</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+          <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-cyan-950 text-cyan-400 border border-cyan-800 flex items-center justify-center text-lg font-bold">
+              <i class="fa-solid fa-book-open-reader"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white">Curriculum Integration</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Complete coverage of all 8 semesters (42 B.Pharm subjects) structured strictly according to Pharmacy Council of India (PCI) guidelines.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-950 text-purple-400 border border-purple-800 flex items-center justify-center text-lg font-bold">
+              <i class="fa-solid fa-camera-retro"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white">Clinical AI Vision</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Live camera snapshot & computer vision OCR to identify pharmaceutical formulations, active ingredients, IUPAC structure, and ADME pharmacokinetics.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center justify-center text-lg font-bold">
+              <i class="fa-solid fa-file-pdf"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white">1-Click PDF Notes Engine</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Guaranteed client-side Blob PDF generation for 288 Unit PDFs (Unit 1 to Unit 5), including 2M, 5M & 10M university model exam answers.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-950 text-amber-400 border border-amber-800 flex items-center justify-center text-lg font-bold">
+              <i class="fa-solid fa-trophy"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white">GPAT / NIPER Prep</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Interactive high-yield competitive exam simulator with countdown timers, subject-wise test sets, and instant answer keys.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-slate-800 text-xs text-slate-400 flex justify-between">
+        <span>PharmaVerse AI Deck</span>
+        <span>Slide 2 of 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: TECH STACK & ARCHITECTURE -->
+    <div class="slide glass-card p-8 md:p-12 rounded-3xl flex-col justify-between min-h-[580px]">
+      <div class="space-y-6">
+        <span class="text-xs font-extrabold uppercase tracking-widest bg-purple-950 text-purple-400 border border-purple-800 px-3.5 py-1.5 rounded-full inline-block">
+          <i class="fa-solid fa-code"></i> Technical Architecture
+        </span>
+
+        <h2 class="text-3xl font-bold text-white">Full-Stack Technology Stack</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+          <!-- Frontend -->
+          <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-3">
+            <div class="text-cyan-400 text-2xl font-bold mb-2">
+              <i class="fa-brands fa-react"></i> Frontend Layer
+            </div>
+            <ul class="text-xs text-slate-300 space-y-2 font-mono">
+              <li class="bg-slate-950 p-2 rounded border border-slate-800">React 18 & Vite 8</li>
+              <li class="bg-slate-950 p-2 rounded border border-slate-800">TailwindCSS & Glassmorphic UI</li>
+              <li class="bg-slate-950 p-2 rounded border border-slate-800">Framer Motion Animations</li>
+              <li class="bg-slate-950 p-2 rounded border border-slate-800">Lucide & FontAwesome Icons</li>
+              <li class="bg-slate-950 p-2 rounded border border-slate-800">HTML5 Canvas Image Resizer</li>
+            </ul>
+          </div>
+
+          <!-- Backend -->
+          <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-3">
+            <div class="text-emerald-400 text-2xl font-bold mb-2">
+              <i class="fa-brands fa-node-js"></i> Backend REST API
+            </div>
+            <ul class="text-xs text-slate-300 space-y-2 font-mono">
+              <li class="bg-slate-950 p-2 rounded border border-slate-800">Node.js Runtime</li>
+              <li class="bg-slate-950 p-2 rounded border border-slate-800">Express.js Framework</li>
+              <li class="bg-slate-950 p-2 rounded border border-slate-800">MongoDB & Mongoose ODM</li>
+              <li class="bg-slate-950 p-2 rounded border border-slate-800">Custom OCR Imprint Parser</li>
+              <li class="bg-slate-950 p-2 rounded border border-slate-800">CORS & Security Controls</li>
+            </ul>
+          </div>
+
+          <!-- Services & Tools -->
+          <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-3">
+            <div class="text-purple-400 text-2xl font-bold mb-2">
+              <i class="fa-solid fa-gears"></i> Engine & Utilities
+            </div>
+            <ul class="text-xs text-slate-300 space-y-2 font-mono">
+              <li class="bg-slate-950 p-2 rounded border border-slate-800">Blob Client PDF Generator</li>
+              <li class="bg-slate-950 p-2 rounded border border-slate-800">WebRTC getUserMedia Camera</li>
+              <li class="bg-slate-950 p-2 rounded border border-slate-800">Oxlint Static Code Checker</li>
+              <li class="bg-slate-950 p-2 rounded border border-slate-800">1-Click VBS/BAT Launchers</li>
+              <li class="bg-slate-950 p-2 rounded border border-slate-800">YouTube Embed API Engine</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-slate-800 text-xs text-slate-400 flex justify-between">
+        <span>PharmaVerse AI Deck</span>
+        <span>Slide 3 of 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: CORE MODULES & FEATURES -->
+    <div class="slide glass-card p-8 md:p-12 rounded-3xl flex-col justify-between min-h-[580px]">
+      <div class="space-y-6">
+        <span class="text-xs font-extrabold uppercase tracking-widest bg-emerald-950 text-emerald-400 border border-emerald-800 px-3.5 py-1.5 rounded-full inline-block">
+          <i class="fa-solid fa-cubes"></i> System Modules
+        </span>
+
+        <h2 class="text-3xl font-bold text-white">6 Core Platform Functional Modules</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-start gap-3">
+            <span class="p-2.5 bg-indigo-950 text-indigo-400 rounded-lg text-lg font-bold">1</span>
+            <div>
+              <h4 class="font-bold text-white text-sm">Semester & Subject Curriculum Explorer</h4>
+              <p class="text-xs text-slate-400 mt-0.5">8 Semesters, 42 B.Pharm Subjects with Unit 1 to Unit 5 topic breakdown.</p>
+            </div>
+          </div>
+
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-start gap-3">
+            <span class="p-2.5 bg-cyan-950 text-cyan-400 rounded-lg text-lg font-bold">2</span>
+            <div>
+              <h4 class="font-bold text-white text-sm">AI Medicine & Pill Scanner Pro</h4>
+              <p class="text-xs text-slate-400 mt-0.5">Live camera capture, computer vision OCR, chemical structure & ADME parameters.</p>
+            </div>
+          </div>
+
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-start gap-3">
+            <span class="p-2.5 bg-emerald-950 text-emerald-400 rounded-lg text-lg font-bold">3</span>
+            <div>
+              <h4 class="font-bold text-white text-sm">Interactive In-App PDF Document Reader</h4>
+              <p class="text-xs text-slate-400 mt-0.5">Custom modal PDF reader with Prev / Next unit navigation & 1-click Blob downloader.</p>
+            </div>
+          </div>
+
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-start gap-3">
+            <span class="p-2.5 bg-amber-950 text-amber-400 rounded-lg text-lg font-bold">4</span>
+            <div>
+              <h4 class="font-bold text-white text-sm">AI Handwritten Notes & Question Bank</h4>
+              <p class="text-xs text-slate-400 mt-0.5">Notebook-style handwritten exam sheets, 2M short questions, 5M & 10M essay answers.</p>
+            </div>
+          </div>
+
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-start gap-3">
+            <span class="p-2.5 bg-red-950 text-red-400 rounded-lg text-lg font-bold">5</span>
+            <div>
+              <h4 class="font-bold text-white text-sm">Solution Pharmacy Video Hub</h4>
+              <p class="text-xs text-slate-400 mt-0.5">Curated official Solution Pharmacy YouTube playlists embedded in-app.</p>
+            </div>
+          </div>
+
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-start gap-3">
+            <span class="p-2.5 bg-purple-950 text-purple-400 rounded-lg text-lg font-bold">6</span>
+            <div>
+              <h4 class="font-bold text-white text-sm">GPAT & NIPER Entrance Exam Portal</h4>
+              <p class="text-xs text-slate-400 mt-0.5">Timed MCQ mock tests, scorecards, and high-yield competitive exam mnemonics.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-slate-800 text-xs text-slate-400 flex justify-between">
+        <span>PharmaVerse AI Deck</span>
+        <span>Slide 4 of 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: PILL SCANNER DEEP DIVE -->
+    <div class="slide glass-card p-8 md:p-12 rounded-3xl flex-col justify-between min-h-[580px]">
+      <div class="space-y-6">
+        <span class="text-xs font-extrabold uppercase tracking-widest bg-cyan-950 text-cyan-400 border border-cyan-800 px-3.5 py-1.5 rounded-full inline-block">
+          <i class="fa-solid fa-eye"></i> Feature Deep-Dive
+        </span>
+
+        <h2 class="text-3xl font-bold text-white">AI Medicine & Pill Scanner Pro</h2>
+
+        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider block">📷 Computer Vision & OCR</span>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Uses HTML5 canvas image processing and live WebRTC camera video stream to capture pill strips and extract printed text imprints.
+              </p>
+            </div>
+
+            <div class="space-y-2">
+              <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider block">📊 ADME Pharmacokinetics Profile</span>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Calculates Bioavailability (F%), Elimination Half-Life (t½), Plasma Protein Binding (PPB%), Hepatic Metabolism, and Renal Clearance.
+              </p>
+            </div>
+
+            <div class="space-y-2">
+              <span class="text-xs font-bold text-purple-400 uppercase tracking-wider block">🧪 Chemical Structure & IUPAC</span>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Renders full chemical structure names and heterocyclic ring classifications (e.g. 4-acetamidophenol, Dihydropyridine, PPIs).
+              </p>
+            </div>
+
+            <div class="space-y-2">
+              <span class="text-xs font-bold text-amber-400 uppercase tracking-wider block">⚠️ Drug Interaction Alert</span>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Evaluates critical drug-drug safety alerts (e.g. Warfarin bleeding risk, Ciprofloxacin chelation, Alcohol toxicity).
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-slate-800 text-xs text-slate-400 flex justify-between">
+        <span>PharmaVerse AI Deck</span>
+        <span>Slide 5 of 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: UNIT PDF NOTES & AI HANDWRITTEN SHEETS -->
+    <div class="slide glass-card p-8 md:p-12 rounded-3xl flex-col justify-between min-h-[580px]">
+      <div class="space-y-6">
+        <span class="text-xs font-extrabold uppercase tracking-widest bg-amber-950 text-amber-400 border border-amber-800 px-3.5 py-1.5 rounded-full inline-block">
+          <i class="fa-solid fa-pen-fancy"></i> Pedagogical Engine
+        </span>
+
+        <h2 class="text-3xl font-bold text-white">AI Handwritten Sheets & University Model Answers</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-amber-950/40 border border-amber-800/80 p-5 rounded-2xl space-y-2">
+            <h4 class="font-bold text-amber-300 text-sm font-mono">✍️ AI Handwritten Exam Sheet Box</h4>
+            <p class="text-xs text-amber-100 font-mono leading-relaxed">
+              Step-by-step pathways (Step I -> Step II -> Step III), hand-drawn flowchart schemes, and memory mnemonics for quick exam revision.
+            </p>
+          </div>
+
+          <div class="bg-emerald-950/40 border border-emerald-800/80 p-5 rounded-2xl space-y-2">
+            <h4 class="font-bold text-emerald-300 text-sm">❓ 2-Mark Very Short Answer Bank</h4>
+            <p class="text-xs text-emerald-100 leading-relaxed">
+              Crisp 2-line model answers for high-frequency university exam short questions.
+            </p>
+          </div>
+
+          <div class="bg-indigo-950/40 border border-indigo-800/80 p-5 rounded-2xl space-y-2">
+            <h4 class="font-bold text-indigo-300 text-sm">📝 10-Mark & 5-Mark Model Answers</h4>
+            <p class="text-xs text-indigo-100 leading-relaxed">
+              Full-length essay model answers with headers, sub-points, SAR rules, and pharmacopoeial assay principles.
+            </p>
+          </div>
+
+          <div class="bg-purple-950/40 border border-purple-800/80 p-5 rounded-2xl space-y-2">
+            <h4 class="font-bold text-purple-300 text-sm">📥 1-Click Blob PDF Downloader</h4>
+            <p class="text-xs text-purple-100 leading-relaxed">
+              Generates client-side PDF binary Blobs directly in-browser to bypass CORS restrictions.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-slate-800 text-xs text-slate-400 flex justify-between">
+        <span>PharmaVerse AI Deck</span>
+        <span>Slide 6 of 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: DATABASE & CONTENT SEEDING -->
+    <div class="slide glass-card p-8 md:p-12 rounded-3xl flex-col justify-between min-h-[580px]">
+      <div class="space-y-6">
+        <span class="text-xs font-extrabold uppercase tracking-widest bg-cyan-950 text-cyan-400 border border-cyan-800 px-3.5 py-1.5 rounded-full inline-block">
+          <i class="fa-solid fa-database"></i> Data Architecture
+        </span>
+
+        <h2 class="text-3xl font-bold text-white">Database Scale & Seeding Pipeline</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+          <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 text-center space-y-2">
+            <div class="text-4xl font-black text-cyan-400">8</div>
+            <div class="text-xs font-bold text-white uppercase">Semesters Configured</div>
+            <p class="text-[11px] text-slate-400">Complete 4-year B.Pharmacy curriculum sequence.</p>
+          </div>
+
+          <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 text-center space-y-2">
+            <div class="text-4xl font-black text-emerald-400">42</div>
+            <div class="text-xs font-bold text-white uppercase">Core Subjects</div>
+            <p class="text-[11px] text-slate-400">HAP, Pharmaceutics, Analysis, Med Chem, Pharmacology, etc.</p>
+          </div>
+
+          <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 text-center space-y-2">
+            <div class="text-4xl font-black text-purple-400">288</div>
+            <div class="text-xs font-bold text-white uppercase">Seeded Unit PDFs</div>
+            <p class="text-[11px] text-slate-400">Unit I to Unit V PDF study resources inserted via seedContent.js.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-slate-800 text-xs text-slate-400 flex justify-between">
+        <span>PharmaVerse AI Deck</span>
+        <span>Slide 7 of 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: GPAT EXAM MODULE -->
+    <div class="slide glass-card p-8 md:p-12 rounded-3xl flex-col justify-between min-h-[580px]">
+      <div class="space-y-6">
+        <span class="text-xs font-extrabold uppercase tracking-widest bg-rose-950 text-rose-400 border border-rose-800 px-3.5 py-1.5 rounded-full inline-block">
+          <i class="fa-solid fa-clock-rotate-left"></i> Competitive Exams
+        </span>
+
+        <h2 class="text-3xl font-bold text-white">GPAT & NIPER Exam Preparation Portal</h2>
+
+        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
+            <div class="space-y-2">
+              <span class="font-bold text-rose-400 block text-sm">⏱️ Interactive Mock Test Simulator</span>
+              <p>Features countdown timer controls, question status grid, and immediate test submission scoring.</p>
+            </div>
+
+            <div class="space-y-2">
+              <span class="font-bold text-amber-400 block text-sm">💡 Instant Explanations & Mnemonics</span>
+              <p>Provides detailed rationale for correct answers, trick tags, and memory shortcuts for rapid review.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-slate-800 text-xs text-slate-400 flex justify-between">
+        <span>PharmaVerse AI Deck</span>
+        <span>Slide 8 of 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: UX & ACCESSIBILITY -->
+    <div class="slide glass-card p-8 md:p-12 rounded-3xl flex-col justify-between min-h-[580px]">
+      <div class="space-y-6">
+        <span class="text-xs font-extrabold uppercase tracking-widest bg-teal-950 text-teal-400 border border-teal-800 px-3.5 py-1.5 rounded-full inline-block">
+          <i class="fa-solid fa-palette"></i> Design & Experience
+        </span>
+
+        <h2 class="text-3xl font-bold text-white">User Experience & Accessibility Standards</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
+            <h4 class="font-bold text-white text-sm">🎨 Premium Dark-Mode Aesthetic</h4>
+            <p class="text-xs text-slate-400">Glassmorphism, vibrant HSL gradients, clean typography, and micro-interactions.</p>
+          </div>
+
+          <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
+            <h4 class="font-bold text-white text-sm">⚡ 1-Click Launchers</h4>
+            <p class="text-xs text-slate-400">Includes launch_app.vbs and start_website.bat for seamless one-click execution.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-slate-800 text-xs text-slate-400 flex justify-between">
+        <span>PharmaVerse AI Deck</span>
+        <span>Slide 9 of 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: CONCLUSION & FUTURE ROADMAP -->
+    <div class="slide glass-card p-8 md:p-12 rounded-3xl flex-col justify-between min-h-[580px] border-emerald-500/30">
+      <div class="space-y-6">
+        <span class="text-xs font-extrabold uppercase tracking-widest bg-emerald-950 text-emerald-400 border border-emerald-800 px-3.5 py-1.5 rounded-full inline-block">
+          <i class="fa-solid fa-rocket"></i> Future Vision
+        </span>
+
+        <h2 class="text-3xl font-bold text-white">Future Roadmap & Conclusion</h2>
+
+        <div class="space-y-3">
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-center gap-3">
+            <i class="fa-solid fa-cubes-stacked text-cyan-400 text-lg"></i>
+            <span class="text-xs text-slate-200">AR 3D Molecular Structure Visualization & 3D Organ Anatomy Explorer</span>
+          </div>
+
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-center gap-3">
+            <i class="fa-solid fa-vial text-emerald-400 text-lg"></i>
+            <span class="text-xs text-slate-200">Interactive Virtual Pharmaceutical Chemistry & Analysis Lab Simulator</span>
+          </div>
+
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-center gap-3">
+            <i class="fa-solid fa-chart-line text-purple-400 text-lg"></i>
+            <span class="text-xs text-slate-200">Institutional Analytics Dashboard for Pharmacy Colleges & Universities</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-slate-800 text-xs text-slate-400 flex justify-between">
+        <span>PharmaVerse AI — Next-Gen B.Pharm AI Platform</span>
+        <span>Slide 10 of 10</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- SLIDE OVERVIEW GRID MODAL -->
+  <div id="overviewModal" class="no-print fixed inset-0 z-[9999] bg-slate-950/90 backdrop-blur-xl p-4 md:p-8 hidden flex items-center justify-center">
+    <div class="glass-card w-full max-w-5xl h-[90vh] rounded-3xl flex flex-col overflow-hidden border border-slate-700 shadow-2xl">
+      <!-- Modal Header -->
+      <div class="bg-slate-900 border-b border-slate-800 p-5 flex items-center justify-between text-white">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-cyan-600 flex items-center justify-center text-white text-lg">
+            <i class="fa-solid fa-table-cells"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white">Presentation Slide Overview Grid</h3>
+            <p class="text-xs text-slate-400">Click any slide thumbnail card to jump directly to that slide</p>
+          </div>
+        </div>
+        <button onclick="toggleOverviewModal()" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl transition-colors">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body Slide Cards Grid -->
+      <div class="flex-1 overflow-y-auto p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <button onclick="jumpToSlide(0)" class="text-left bg-slate-900 hover:bg-cyan-950 p-4 rounded-2xl border border-slate-800 hover:border-cyan-500/60 transition-all space-y-2 group">
+          <div class="flex items-center justify-between text-xs font-mono font-bold text-cyan-400">
+            <span>SLIDE 1</span>
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <h4 class="text-sm font-bold text-white group-hover:text-cyan-300">PharmaVerse AI Title Slide</h4>
+          <p class="text-[11px] text-slate-400">Introduction to Next-Gen B.Pharm AI Learning Platform.</p>
+        </button>
+
+        <button onclick="jumpToSlide(1)" class="text-left bg-slate-900 hover:bg-indigo-950 p-4 rounded-2xl border border-slate-800 hover:border-indigo-500/60 transition-all space-y-2 group">
+          <div class="flex items-center justify-between text-xs font-mono font-bold text-indigo-400">
+            <span>SLIDE 2</span>
+            <i class="fa-solid fa-bullseye"></i>
+          </div>
+          <h4 class="text-sm font-bold text-white group-hover:text-indigo-300">Executive Summary & Vision</h4>
+          <p class="text-[11px] text-slate-400">Curriculum Integration, AI Vision & PDF Engine Value.</p>
+        </button>
+
+        <button onclick="jumpToSlide(2)" class="text-left bg-slate-900 hover:bg-purple-950 p-4 rounded-2xl border border-slate-800 hover:border-purple-500/60 transition-all space-y-2 group">
+          <div class="flex items-center justify-between text-xs font-mono font-bold text-purple-400">
+            <span>SLIDE 3</span>
+            <i class="fa-solid fa-code"></i>
+          </div>
+          <h4 class="text-sm font-bold text-white group-hover:text-purple-300">Full-Stack Technology Stack</h4>
+          <p class="text-[11px] text-slate-400">React 18, Vite 8, Node.js, Express & MongoDB.</p>
+        </button>
+
+        <button onclick="jumpToSlide(3)" class="text-left bg-slate-900 hover:bg-emerald-950 p-4 rounded-2xl border border-slate-800 hover:border-emerald-500/60 transition-all space-y-2 group">
+          <div class="flex items-center justify-between text-xs font-mono font-bold text-emerald-400">
+            <span>SLIDE 4</span>
+            <i class="fa-solid fa-cubes"></i>
+          </div>
+          <h4 class="text-sm font-bold text-white group-hover:text-emerald-300">6 Core Platform Modules</h4>
+          <p class="text-[11px] text-slate-400">Syllabus Explorer, Pill Scanner, PDFs, Videos, GPAT.</p>
+        </button>
+
+        <button onclick="jumpToSlide(4)" class="text-left bg-slate-900 hover:bg-cyan-950 p-4 rounded-2xl border border-slate-800 hover:border-cyan-500/60 transition-all space-y-2 group">
+          <div class="flex items-center justify-between text-xs font-mono font-bold text-cyan-400">
+            <span>SLIDE 5</span>
+            <i class="fa-solid fa-eye"></i>
+          </div>
+          <h4 class="text-sm font-bold text-white group-hover:text-cyan-300">AI Pill Scanner Pro Deep-Dive</h4>
+          <p class="text-[11px] text-slate-400">Live Camera, ADME Pharmacokinetics & Safety Warnings.</p>
+        </button>
+
+        <button onclick="jumpToSlide(5)" class="text-left bg-slate-900 hover:bg-amber-950 p-4 rounded-2xl border border-slate-800 hover:border-amber-500/60 transition-all space-y-2 group">
+          <div class="flex items-center justify-between text-xs font-mono font-bold text-amber-400">
+            <span>SLIDE 6</span>
+            <i class="fa-solid fa-pen-fancy"></i>
+          </div>
+          <h4 class="text-sm font-bold text-white group-hover:text-amber-300">AI Handwritten Notes & Q&A</h4>
+          <p class="text-[11px] text-slate-400">Notebook sheets, 2M, 5M & 10M essay answers.</p>
+        </button>
+
+        <button onclick="jumpToSlide(6)" class="text-left bg-slate-900 hover:bg-blue-950 p-4 rounded-2xl border border-slate-800 hover:border-blue-500/60 transition-all space-y-2 group">
+          <div class="flex items-center justify-between text-xs font-mono font-bold text-blue-400">
+            <span>SLIDE 7</span>
+            <i class="fa-solid fa-database"></i>
+          </div>
+          <h4 class="text-sm font-bold text-white group-hover:text-blue-300">Database Scale & Seeding</h4>
+          <p class="text-[11px] text-slate-400">8 Semesters, 42 Subjects, 288 Seeded Unit PDFs.</p>
+        </button>
+
+        <button onclick="jumpToSlide(7)" class="text-left bg-slate-900 hover:bg-rose-950 p-4 rounded-2xl border border-slate-800 hover:border-rose-500/60 transition-all space-y-2 group">
+          <div class="flex items-center justify-between text-xs font-mono font-bold text-rose-400">
+            <span>SLIDE 8</span>
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
+          <h4 class="text-sm font-bold text-white group-hover:text-rose-300">GPAT & NIPER Exam Portal</h4>
+          <p class="text-[11px] text-slate-400">Timed MCQ mock tests, scorecards & mnemonics.</p>
+        </button>
+
+        <button onclick="jumpToSlide(8)" class="text-left bg-slate-900 hover:bg-teal-950 p-4 rounded-2xl border border-slate-800 hover:border-teal-500/60 transition-all space-y-2 group">
+          <div class="flex items-center justify-between text-xs font-mono font-bold text-teal-400">
+            <span>SLIDE 9</span>
+            <i class="fa-solid fa-palette"></i>
+          </div>
+          <h4 class="text-sm font-bold text-white group-hover:text-teal-300">User Experience & Design</h4>
+          <p class="text-[11px] text-slate-400">Glassmorphism, dark mode & 1-click launchers.</p>
+        </button>
+
+        <button onclick="jumpToSlide(9)" class="text-left bg-slate-900 hover:bg-emerald-950 p-4 rounded-2xl border border-slate-800 hover:border-emerald-500/60 transition-all space-y-2 group">
+          <div class="flex items-center justify-between text-xs font-mono font-bold text-emerald-400">
+            <span>SLIDE 10</span>
+            <i class="fa-solid fa-rocket"></i>
+          </div>
+          <h4 class="text-sm font-bold text-white group-hover:text-emerald-300">Future Roadmap & Conclusion</h4>
+          <p class="text-[11px] text-slate-400">AR 3D Molecules, Virtual Labs & Analytics.</p>
+        </button>
+      </div>
+
+      <div class="bg-slate-900 p-4 border-t border-slate-800 text-xs text-slate-400 flex items-center justify-between font-mono">
+        <span>Tip: Press 'O' or 'G' key on keyboard to toggle Slide Overview anytime</span>
+        <button onclick="toggleOverviewModal()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-sans text-xs">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT SLIDE CONTROLLER -->
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const counter = document.getElementById('slideCounter');
+    const modal = document.getElementById('overviewModal');
+
+    function updateSlides() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+      });
+      counter.innerText = `Slide ${currentSlide + 1} of ${slides.length}`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateSlides();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlides();
+      }
+    }
+
+    function jumpToSlide(slideIndex) {
+      if (slideIndex >= 0 && slideIndex < slides.length) {
+        currentSlide = slideIndex;
+        updateSlides();
+        modal.classList.add('hidden');
+      }
+    }
+
+    function toggleOverviewModal() {
+      modal.classList.toggle('hidden');
+    }
+
+    // Keyboard Arrow & Hotkey Navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+      if (e.key === 'o' || e.key === 'O' || e.key === 'g' || e.key === 'G') toggleOverviewModal();
+    });
+  </script>
+
+</body>
+</html>
