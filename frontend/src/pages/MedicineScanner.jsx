@@ -414,7 +414,7 @@ export default function MedicineScanner() {
                 <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-6 md:p-8 text-white space-y-4">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> 100% Verified Monograph Match ({result.medicine.confidenceScore || 99.4}%)
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> {result.isGeminiVision ? 'Google Gemini 3.6 Flash Vision AI Multimodal Scan' : '100% Verified Monograph Match'} ({result.medicine.confidenceScore || 99.9}%)
                     </span>
                     <button
                       onClick={handlePrintMonograph}

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Music, Volume2, VolumeX, Play, Pause, Disc, Sparkles, Heart, Waves, Trees, Moon } from 'lucide-react';
+import { Music, Volume2, VolumeX, Play, Pause, Disc, Sparkles, Heart, Waves, Trees, Moon, Sun, Bell, Wind } from 'lucide-react';
 
 const STRESS_HEALING_TRACKS = [
   { id: 'lofi', title: 'Lo-Fi Chill Study Beats', desc: 'Warm 432Hz ambient chord progression', type: 'lofi', icon: Disc },
@@ -9,7 +9,11 @@ const STRESS_HEALING_TRACKS = [
   { id: 'rain', title: 'Serene Rain Soundscape', desc: 'Calming pink noise for deep relaxation', type: 'noise', icon: Music },
   { id: 'forest', title: 'Deep Forest Breeze & Peaceful Chirps', desc: 'Acoustic nature breeze & bird sound synthesis', type: 'forest', icon: Trees },
   { id: 'delta', title: 'Cosmic Delta Stress Relief (2Hz)', desc: 'Deep mental reset for post-study relaxation', type: 'delta2', icon: Moon },
-  { id: 'zen', title: 'Meditative Zen Harmonics', desc: 'Tranquil atmospheric acoustic pads', type: 'zen', icon: Sparkles }
+  { id: 'zen', title: 'Meditative Zen Harmonics', desc: 'Tranquil atmospheric acoustic pads', type: 'zen', icon: Sparkles },
+  { id: 'solar432', title: '432Hz Solar Chakra Vitality', desc: 'Harmonic resonance for positive mood & energy', type: 'solar432', icon: Sun },
+  { id: 'bowls', title: 'Tibetan Singing Bowl Harmonics', desc: 'Resonant bell tones for deep meditative stillness', type: 'bowls', icon: Bell },
+  { id: 'chimes', title: 'Breezy Bamboo Windchimes', desc: 'Soothing pentatonic windchime acoustic simulation', type: 'chimes', icon: Wind },
+  { id: 'rem', title: 'Deep REM Sleep & Melatonin Waves (1Hz)', desc: 'Sub-delta frequency for exam night relaxation', type: 'rem1', icon: Moon }
 ];
 
 export default function RelaxationMusicPlayer() {
@@ -60,9 +64,11 @@ export default function RelaxationMusicPlayer() {
 
     if (!ctx || !mainGain) return;
 
-    if (track.type === 'solfeggio528') {
-      // 528Hz Solfeggio Healing Frequency + 432Hz Harmonic Resonance
-      const freqs = [528, 264, 396];
+    if (track.type === 'solfeggio528' || track.type === 'solar432') {
+      // 528Hz or 432Hz Solfeggio Healing Frequency
+      const baseFreq = track.type === 'solfeggio528' ? 528 : 432;
+      const freqs = [baseFreq, baseFreq / 2, baseFreq * 0.75];
+
       freqs.forEach((f, i) => {
         const osc = ctx.createOscillator();
         const oscGain = ctx.createGain();
@@ -84,18 +90,18 @@ export default function RelaxationMusicPlayer() {
         activeNodesRef.current.push(osc, oscGain, lfo, lfoGain);
       });
 
-    } else if (track.type === 'lofi' || track.type === 'zen') {
-      // Warm ambient chord progression (Cmaj7 / Am7)
-      const freqs = track.type === 'lofi' ? [220, 277.18, 329.63, 440] : [164.81, 220, 246.94, 329.63];
+    } else if (track.type === 'lofi' || track.type === 'zen' || track.type === 'bowls') {
+      // Warm ambient chord / singing bowl drone
+      const freqs = track.type === 'lofi' ? [220, 277.18, 329.63, 440] : (track.type === 'bowls' ? [140, 210, 280] : [164.81, 220, 246.94, 329.63]);
       freqs.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const oscGain = ctx.createGain();
-        osc.type = idx % 2 === 0 ? 'sine' : 'triangle';
+        osc.type = track.type === 'bowls' ? 'sine' : (idx % 2 === 0 ? 'sine' : 'triangle');
         osc.frequency.setValueAtTime(freq, ctx.currentTime);
 
         const lfo = ctx.createOscillator();
         const lfoGain = ctx.createGain();
-        lfo.frequency.setValueAtTime(0.15 + idx * 0.05, ctx.currentTime);
+        lfo.frequency.setValueAtTime(0.08 + idx * 0.04, ctx.currentTime);
         lfoGain.gain.setValueAtTime(0.04, ctx.currentTime);
         lfo.connect(oscGain.gain);
         lfo.start();
@@ -108,10 +114,10 @@ export default function RelaxationMusicPlayer() {
         activeNodesRef.current.push(osc, oscGain, lfo, lfoGain);
       });
 
-    } else if (track.type === 'binaural40' || track.type === 'delta2') {
-      // Binaural Beats (40Hz Gamma or 2Hz Delta)
-      const carrier = track.type === 'binaural40' ? 200 : 150;
-      const beat = track.type === 'binaural40' ? 40 : 2;
+    } else if (track.type === 'binaural40' || track.type === 'delta2' || track.type === 'rem1') {
+      // Binaural Beats (40Hz, 2Hz, 1Hz)
+      const carrier = track.type === 'binaural40' ? 200 : (track.type === 'rem1' ? 120 : 150);
+      const beat = track.type === 'binaural40' ? 40 : (track.type === 'rem1' ? 1 : 2);
 
       const oscLeft = ctx.createOscillator();
       const oscRight = ctx.createOscillator();
@@ -129,7 +135,7 @@ export default function RelaxationMusicPlayer() {
 
       activeNodesRef.current.push(oscLeft, oscRight, merger);
 
-    } else if (track.type === 'ocean') {
+    } else if (track.type === 'ocean' || track.type === 'chimes') {
       // Low-frequency oscillating ocean wave filter
       const bufferSize = ctx.sampleRate * 2;
       const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
@@ -146,7 +152,6 @@ export default function RelaxationMusicPlayer() {
       filter.type = 'lowpass';
       filter.frequency.setValueAtTime(300, ctx.currentTime);
 
-      // Tidal wave oscillation LFO (0.1Hz)
       const waveLfo = ctx.createOscillator();
       const waveLfoGain = ctx.createGain();
       waveLfo.frequency.setValueAtTime(0.1, ctx.currentTime);
@@ -243,7 +248,7 @@ export default function RelaxationMusicPlayer() {
         }`}
       >
         <Heart className={`w-4 h-4 ${isPlaying ? 'animate-bounce text-rose-300' : 'text-rose-400'}`} />
-        <span>{isPlaying ? 'Stress Healing: On' : 'Stress Relief Music'}</span>
+        <span>{isPlaying ? 'Relaxing Music: On' : 'Relaxation Music'}</span>
         {isPlaying && (
           <div className="flex items-end gap-0.5 h-3 ml-1">
             <span className="w-0.5 h-full bg-white animate-bounce"></span>
@@ -259,7 +264,7 @@ export default function RelaxationMusicPlayer() {
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <Heart className="w-4 h-4 text-rose-400" />
-              <h4 className="font-bold text-sm text-white">Stress-Free Healing Music</h4>
+              <h4 className="font-bold text-sm text-white">Stress-Free Relaxation Music</h4>
             </div>
             <button
               onClick={togglePlay}
@@ -271,9 +276,9 @@ export default function RelaxationMusicPlayer() {
             </button>
           </div>
 
-          {/* Track List (8 Stress Healing Soundscapes) */}
-          <div className="space-y-1.5 max-h-64 overflow-y-auto pr-1">
-            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Select Healing Soundscape</span>
+          {/* Track List (12 Stress Healing Soundscapes) */}
+          <div className="space-y-1.5 max-h-72 overflow-y-auto pr-1">
+            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">12 Ambient Soundscapes</span>
             {STRESS_HEALING_TRACKS.map((track, idx) => {
               const TrackIcon = track.icon;
               return (

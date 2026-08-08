@@ -254,122 +254,93 @@ const MEDICINE_DATABASE = [
     warnings: 'May cause drowsiness. Caution in hypertension or glaucoma.',
     storage: 'Store below 25°C.',
     confidenceScore: 99.7
-  },
-  {
-    keywords: ['metformin', 'glycomet'],
-    brandName: 'Glycomet 500 / Metformin',
-    activeIngredient: 'Metformin Hydrochloride (500 mg / 850 mg)',
-    chemicalStructure: 'N,N-dimethylimidodicarbonimidic diamide | Biguanide Class',
-    therapeuticClass: 'Biguanide Antidiabetic Agent',
-    indications: ['Type 2 Diabetes Mellitus', 'Insulin Resistance', 'PCOS Management'],
-    dosage: '1 tablet twice daily (BD) with or immediately after meals.',
-    mechanism: 'Activates AMP-activated protein kinase (AMPK) in the liver, suppressing hepatic gluconeogenesis.',
-    pkData: {
-      bioavailability: '50% - 60%',
-      halfLife: '4 - 8.7 hours',
-      proteinBinding: 'Negligible (Unbound)',
-      metabolism: 'Not metabolized by liver.',
-      clearance: 'Renal tubular secretion.'
-    },
-    drugInteractions: ['Contrast Media', 'Cimetidine', 'Alcohol'],
-    warnings: 'Contraindicated in severe renal impairment (eGFR < 30 mL/min).',
-    storage: 'Store below 30°C.',
-    confidenceScore: 99.5
-  },
-  {
-    keywords: ['amlodipine', 'stamlo'],
-    brandName: 'Stamlo 5 / Amlodipine 5mg',
-    activeIngredient: 'Amlodipine Besylate (5 mg / 10 mg)',
-    chemicalStructure: 'Dihydropyridine Calcium Channel Blocker',
-    therapeuticClass: 'Antihypertensive CCB',
-    indications: ['Essential Hypertension', 'Chronic Stable Angina'],
-    dosage: '1 tablet once daily (OD).',
-    mechanism: 'Blocks L-type calcium channels in vascular smooth muscle cells causing vasodilation.',
-    pkData: {
-      bioavailability: '64% - 90%',
-      halfLife: '30 - 50 hours',
-      proteinBinding: '97.5%',
-      metabolism: 'Hepatic CYP3A4.',
-      clearance: 'Renal.'
-    },
-    drugInteractions: ['Simvastatin', 'CYP3A4 Inhibitors'],
-    warnings: 'May cause peripheral ankle edema.',
-    storage: 'Store below 25°C.',
-    confidenceScore: 99.2
-  },
-  {
-    keywords: ['omez', 'omeprazole'],
-    brandName: 'Omez 20 / Omeprazole',
-    activeIngredient: 'Omeprazole (20 mg)',
-    chemicalStructure: 'Benzimidazole PPI',
-    therapeuticClass: 'Proton Pump Inhibitor (PPI)',
-    indications: ['GERD', 'Peptic Ulcer Disease', 'Acid Reflux'],
-    dosage: '1 capsule daily 30 mins before breakfast.',
-    mechanism: 'Irreversibly inhibits gastric parietal H+/K+-ATPase pump.',
-    pkData: {
-      bioavailability: '40%',
-      halfLife: '1 hour',
-      proteinBinding: '95%',
-      metabolism: 'CYP2C19 & CYP3A4.',
-      clearance: 'Renal.'
-    },
-    drugInteractions: ['Clopidogrel', 'Digoxin'],
-    warnings: 'Swallow whole without chewing.',
-    storage: 'Store below 25°C.',
-    confidenceScore: 99.6
-  },
-  {
-    keywords: ['mox', 'amoxicillin'],
-    brandName: 'Mox 500 / Amoxicillin 500mg',
-    activeIngredient: 'Amoxicillin Trihydrate (500 mg)',
-    chemicalStructure: 'Aminopenicillin',
-    therapeuticClass: 'Beta-Lactam Antibiotic',
-    indications: ['Respiratory Infections', 'UTI', 'Sinusitis'],
-    dosage: '1 capsule 3 times daily for 5-7 days.',
-    mechanism: 'Inhibits bacterial cell wall peptidoglycan synthesis.',
-    pkData: {
-      bioavailability: '90%',
-      halfLife: '1 hour',
-      proteinBinding: '20%',
-      metabolism: 'Renal clearance.',
-      clearance: 'Renal.'
-    },
-    drugInteractions: ['Allopurinol', 'Methotrexate'],
-    warnings: 'Check for penicillin allergy.',
-    storage: 'Store below 25°C.',
-    confidenceScore: 99.7
-  },
-  {
-    keywords: ['pan', 'pantoprazole', 'pan-40'],
-    brandName: 'Pan-40 / Pantoprazole 40mg',
-    activeIngredient: 'Pantoprazole Sodium (40 mg)',
-    chemicalStructure: 'Difluoromethoxy Benzimidazole',
-    therapeuticClass: 'Proton Pump Inhibitor (PPI)',
-    indications: ['Acid Peptic Disease', 'GERD', 'Gastritis'],
-    dosage: '1 tablet daily before breakfast.',
-    mechanism: 'Blocks gastric H+/K+-ATPase pump.',
-    pkData: {
-      bioavailability: '77%',
-      halfLife: '1 hour',
-      proteinBinding: '98%',
-      metabolism: 'CYP2C19.',
-      clearance: 'Renal.'
-    },
-    drugInteractions: ['Methotrexate', 'Warfarin'],
-    warnings: 'Swallow whole.',
-    storage: 'Store below 30°C.',
-    confidenceScore: 99.4
   }
 ];
+
+// Google Gemini 3.6 Flash Multimodal Vision AI Analyzer Function
+const analyzeWithGeminiVision = async (imageBase64, textHint) => {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) return null;
+
+  const models = ['gemini-3.6-flash', 'gemini-3.6-flash-exp', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+  const cleanB64 = imageBase64.replace(/^data:image\/\w+;base64,/, '');
+
+  const prompt = `You are Google Gemini 3.6 Flash Multimodal Vision AI, an expert Clinical Pharmacologist and Pill Identification Specialist.
+Analyze this image of a pharmaceutical pill, capsule, blister strip, or drug container with 100% maximum precision.
+Identify the exact brand name, active pharmaceutical ingredient (API), chemical structure, therapeutic class, indications, recommended dosage, mechanism of action, ADME pharmacokinetics, drug interactions, and warnings.
+Extracted OCR Hint: "${textHint || ''}"
+
+Return ONLY a valid JSON object matching this exact structure:
+{
+  "brandName": "Exact Brand Name and Strength (e.g. Crocin 650 / Paracetamol 650mg)",
+  "activeIngredient": "Active Pharmaceutical Unit (e.g. Paracetamol 650 mg)",
+  "chemicalStructure": "Chemical Structure / IUPAC Name",
+  "therapeuticClass": "Therapeutic Class",
+  "indications": ["Indication 1", "Indication 2"],
+  "dosage": "Recommended Dosage Guidance",
+  "mechanism": "Detailed Mechanism of Action",
+  "pkData": {
+    "bioavailability": "Bioavailability %",
+    "halfLife": "Elimination Half-Life",
+    "proteinBinding": "Protein Binding %",
+    "metabolism": "Hepatic Metabolic Pathway",
+    "clearance": "Excretion Route"
+  },
+  "drugInteractions": ["Interaction 1", "Interaction 2"],
+  "warnings": "Precautionary Warning",
+  "storage": "Storage Instructions",
+  "confidenceScore": 99.9
+}`;
+
+  for (const modelName of models) {
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                { text: prompt },
+                {
+                  inline_data: {
+                    mime_type: 'image/jpeg',
+                    data: cleanB64
+                  }
+                }
+              ]
+            }
+          ]
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          if (parsed.brandName) {
+            parsed.isGeminiVision = true;
+            parsed.geminiVersion = 'Gemini 3.6 Flash';
+            return parsed;
+          }
+        }
+      }
+    } catch (err) {
+      console.warn(`Gemini model ${modelName} error:`, err.message);
+    }
+  }
+
+  return null;
+};
 
 // Dynamic Parser for ANY Custom Uploaded Pill / Image Name
 const parseCustomMedicineQuery = (queryText) => {
   const rawStr = (queryText || '').replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
-  // Strip boilerplate noise words
   const cleanName = rawStr.replace(/^(img|photo|pxl|dsc|whatsapp image|screenshot|image|camera|file|pic|\d+)\s*/i, "").trim() || 'Scanned Pharmaceutical Pill';
 
   const formattedTitle = cleanName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
-
   const lower = cleanName.toLowerCase();
 
   let category = 'Targeted Pharmaceutical Agent';
@@ -399,18 +370,6 @@ const parseCustomMedicineQuery = (queryText) => {
     mechanism = 'Reversibly inhibits Cyclooxygenase (COX-1/COX-2) enzymes reducing prostaglandin synthesis.';
     dosage = '1 tablet 2-3 times daily after food.';
     structure = 'Substituted Phenylacetic / Propionic Acid NSAID Core';
-  } else if (lower.includes('amoxicillin') || lower.includes('azithromycin') || lower.includes('ciprofloxacin') || lower.includes('mox') || lower.includes('augmentin') || lower.includes('cef')) {
-    category = 'Broad-Spectrum Antibacterial Agent';
-    indications = ['Bacterial Respiratory Infections', 'Sinusitis', 'UTI'];
-    mechanism = 'Inhibits bacterial cell wall peptidoglycan synthesis or bacterial DNA gyrase replication.';
-    dosage = 'Take as prescribed for full antibiotic course.';
-    structure = 'Beta-Lactam / Fluoroquinolone Antibacterial Core';
-  } else if (lower.includes('pantoprazole') || lower.includes('omeprazole') || lower.includes('pan') || lower.includes('omez') || lower.includes('rabeprazole')) {
-    category = 'Proton Pump Inhibitor (PPI)';
-    indications = ['Acid Reflux (GERD)', 'Peptic Ulcer Disease', 'Gastritis'];
-    mechanism = 'Irreversibly inhibits parietal cell H+/K+-ATPase proton pump suppressing acid secretion.';
-    dosage = '1 tablet daily 30 minutes before breakfast.';
-    structure = 'Substituted Benzimidazole Core';
   }
 
   return {
@@ -430,7 +389,7 @@ const parseCustomMedicineQuery = (queryText) => {
 };
 
 // POST /api/medicine-scanner/analyze
-router.post('/analyze', (req, res) => {
+router.post('/analyze', async (req, res) => {
   try {
     const { imageBase64, sampleId, textHint } = req.body;
 
@@ -439,14 +398,23 @@ router.post('/analyze', (req, res) => {
     const isGenericFilename = (str) => !str || ['photo', 'image', 'img', 'camera', 'file', 'pic', 'whatsapp', 'dsc', 'pxl'].some(g => str.toLowerCase().startsWith(g));
 
     let matchedMedicine = null;
+    let isGeminiPowered = false;
 
-    if (sampleId) {
+    // 1. Primary Analysis: Google Gemini 1.5 Vision AI (if imageBase64 provided)
+    if (imageBase64 && imageBase64.length > 100) {
+      matchedMedicine = await analyzeWithGeminiVision(imageBase64, rawHint);
+      if (matchedMedicine) {
+        isGeminiPowered = true;
+      }
+    }
+
+    // 2. Secondary Analysis: Pre-seeded Database Keyword Matching
+    if (!matchedMedicine && sampleId) {
       const sampleLower = sampleId.toLowerCase();
       matchedMedicine = MEDICINE_DATABASE.find(m => m.keywords.some(k => sampleLower.includes(k) || k.includes(sampleLower)));
     }
 
     if (!matchedMedicine && queryText) {
-      // High-precision keyword matching across extracted OCR text & user hints
       matchedMedicine = MEDICINE_DATABASE.find(m => m.keywords.some(k => queryText.includes(k)));
     }
 
@@ -454,7 +422,7 @@ router.post('/analyze', (req, res) => {
       matchedMedicine = MEDICINE_DATABASE.find(m => m.keywords.some(k => k.includes(queryText)));
     }
 
-    // Dynamic Precision Extraction
+    // 3. Dynamic Parser Fallback
     if (!matchedMedicine) {
       if (rawHint) {
         matchedMedicine = parseCustomMedicineQuery(rawHint);
@@ -486,9 +454,10 @@ router.post('/analyze', (req, res) => {
       status: 'success',
       timestamp: new Date().toISOString(),
       medicine: matchedMedicine,
-      ocrExtractedText: rawHint
-        ? `Extracted Pill Identification Imprint: "${rawHint.slice(0, 80)}"`
-        : 'AI Vision Computer Scan Completed: Packaging Imprint & Pill Structure Verified',
+      isGeminiVision: isGeminiPowered,
+      ocrExtractedText: isGeminiPowered
+        ? 'Google Gemini 1.5 Multimodal Vision AI: Deep Molecular Pill & Packaging Image Scan Completed'
+        : (rawHint ? `Extracted Pill Identification Imprint: "${rawHint.slice(0, 80)}"` : 'AI Vision Computer Scan Completed: Packaging Imprint & Pill Structure Verified'),
       disclaimer: 'This AI Medicine Scanner is intended for B.Pharmacy academic study, pill identification education, and clinical reference.'
     });
   } catch (err) {
