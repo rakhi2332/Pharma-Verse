@@ -13,7 +13,6 @@ import DailyChallenges from './pages/DailyChallenges';
 import DiseaseMaps from './pages/DiseaseMaps';
 import MedicineScanner from './pages/MedicineScanner';
 import StudyPlanner from './pages/StudyPlanner';
-import DrugGame from './pages/DrugGame';
 
 function App() {
   return (
@@ -33,7 +32,6 @@ function App() {
         <Route path="/disease-maps" element={<DiseaseMaps />} />
         <Route path="/medicine-scanner" element={<MedicineScanner />} />
         <Route path="/study-planner" element={<StudyPlanner />} />
-        <Route path="/drug-game" element={<DrugGame />} />
       </Routes>
     </div>
   );

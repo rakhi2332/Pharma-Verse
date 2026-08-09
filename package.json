@@ -1,0 +1,10 @@
+{
+  "name": "pharmaverse-ai-root",
+  "version": "1.0.0",
+  "description": "PharmaVerse B.Pharmacy AI Platform Root Workspace",
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "start": "cd backend && node server.js",
+    "build": "cd frontend && npm run build"
+  }
+}

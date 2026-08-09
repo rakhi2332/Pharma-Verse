@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Pill, Search, X, BookOpen, Brain, Scan, Activity, Award, Calendar, Layers, Gamepad2 } from 'lucide-react';
+import { Pill, Search, X, BookOpen, Brain, Scan, Activity, Award, Calendar, Layers } from 'lucide-react';
 import RelaxationMusicPlayer from './RelaxationMusicPlayer';
 
 const SEARCH_DATABASE = [
@@ -8,7 +8,6 @@ const SEARCH_DATABASE = [
   { title: 'Human Anatomy & Physiology I (BP101T)', type: 'Subject & PDF Notes', url: '/subjects/bp101t/content', icon: BookOpen, tags: ['hap', 'anatomy', 'physiology', 'cell', 'tissue', 'skeleton', 'joints', 'blood', 'bp101t'] },
   { title: 'Pharmaceutical Analysis I (BP102T)', type: 'Subject & PDF Notes', url: '/subjects/bp102t/content', icon: BookOpen, tags: ['analysis', 'titration', 'acid base', 'non aqueous', 'precipitation', 'gravimetry', 'bp102t'] },
   { title: 'Pharmaceutical Inorganic Chemistry (BP104T)', type: 'Subject & PDF Notes', url: '/subjects/bp104t/content', icon: BookOpen, tags: ['inorganic', 'chemistry', 'impurities', 'gastrointestinal', 'radiopharmaceuticals', 'bp104t'] },
-  { title: 'Pharma MoA Sequence Challenge Game', type: 'Interactive Game', url: '/drug-game', icon: Gamepad2, tags: ['drug', 'game', 'puzzle', 'pharmacology', 'mechanism', 'sequence', 'match', 'play'] },
   { title: '24/7 AI Tutor & Learning Assistant', type: 'AI Tool', url: '/ai-tutor', icon: Brain, tags: ['ai', 'tutor', 'mentor', 'chat', 'doubt', 'questions', 'solver'] },
   { title: 'AI Pill & Medicine Scanner', type: 'Clinical Tool', url: '/medicine-scanner', icon: Scan, tags: ['pill', 'scanner', 'medicine', 'ocr', 'image', 'identification'] },
   { title: 'Interactive Disease Maps', type: 'Medical Tool', url: '/disease-maps', icon: Activity, tags: ['disease', 'pathology', 'maps', 'symptoms', 'treatment'] },
@@ -69,7 +68,7 @@ export default function Navbar() {
               setIsOpen(true);
             }}
             onFocus={() => setIsOpen(true)}
-            placeholder="Search subjects, PDF notes, Drug Game, AI tools, GPAT..."
+            placeholder="Search subjects, PDF notes, AI tools, GPAT..."
             className="w-full pl-10 pr-9 py-2 bg-slate-100/80 focus:bg-white text-slate-800 placeholder-slate-400 text-xs sm:text-sm font-medium rounded-full border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all shadow-inner"
           />
           {query && (
@@ -128,11 +127,8 @@ export default function Navbar() {
       </div>
 
       {/* Nav Links */}
-      <div className="hidden lg:flex items-center gap-4 text-slate-600 font-medium text-xs sm:text-sm">
+      <div className="hidden lg:flex items-center gap-5 text-slate-600 font-medium text-xs sm:text-sm">
         <Link to="/semesters" className="hover:text-blue-600 transition-colors font-semibold">Semesters</Link>
-        <Link to="/drug-game" className="hover:text-indigo-600 transition-colors font-bold text-indigo-600 flex items-center gap-1 bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-200">
-          <Gamepad2 className="w-4 h-4 text-indigo-600" /> Drug Game
-        </Link>
         <Link to="/study-planner" className="hover:text-blue-600 transition-colors">Planner</Link>
         <Link to="/medicine-scanner" className="hover:text-blue-600 transition-colors">Scanner</Link>
         <Link to="/ai-tutor" className="hover:text-blue-600 transition-colors font-semibold flex items-center gap-1">

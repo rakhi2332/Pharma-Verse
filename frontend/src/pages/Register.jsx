@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import Navbar from '../components/Navbar';
-import { API_BASE_URL } from '../apiConfig';
 import { Link, useNavigate } from 'react-router-dom';
 import { Pill, Mail, Lock, User, Sparkles } from 'lucide-react';
 import axios from 'axios';
@@ -40,13 +38,14 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${API_BASE_URL}/auth/register`, {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const res = await axios.post(`${API_URL}/auth/register`, {
         name,
         email,
         password
       }).catch((err) => {
-        // If backend API is offline or unreachable (e.g. on mobile Vercel), perform smooth client auth!
-        if (err.message === 'Network Error' || !err.response) {
+        // Fallback for Vercel static deployments (405 Method Not Allowed / 404 / Network Error)
+        if (err.message === 'Network Error' || !err.response || err.response?.status === 405 || err.response?.status === 404 || err.response?.status >= 500) {
           return {
             data: {
               _id: 'user-' + Date.now(),
@@ -117,7 +116,7 @@ export default function Register() {
                 onChange={(e) => setName(e.target.value)}
                 required
                 className="block w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                placeholder="Rahul Sharma"
+                placeholder="Mike"
               />
             </div>
           </div>

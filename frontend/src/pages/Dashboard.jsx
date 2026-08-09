@@ -1,4 +1,4 @@
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { logout } from '../store/authSlice';
@@ -9,7 +9,6 @@ import {
   LogOut, 
   CheckCircle2, 
   Award, 
-  Clock, 
   Calendar, 
   GitFork, 
   Scan, 
@@ -17,8 +16,7 @@ import {
   ShieldAlert, 
   ArrowRight,
   Sparkles,
-  Target,
-  Gamepad2
+  Target
 } from 'lucide-react';
 
 export default function Dashboard() {
@@ -132,24 +130,6 @@ export default function Dashboard() {
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Drug Game */}
-            <Link
-              to="/drug-game"
-              className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all group flex flex-col justify-between space-y-4 border-t-4 border-t-indigo-600"
-            >
-              <div className="flex items-center justify-between">
-                <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Gamepad2 className="w-6 h-6" />
-                </div>
-                <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">New Game</span>
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">Drug Challenge Game</h3>
-                <p className="text-slate-500 text-sm mt-1">Timed speed quiz on drug mechanisms, chemical ring cores, and clinical ADME parameters.</p>
-              </div>
-              <div className="text-xs font-bold text-indigo-600 flex items-center gap-1">Play Drug Game <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" /></div>
-            </Link>
-
             {/* Study Planner */}
             <Link
               to="/study-planner"
@@ -290,4 +270,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
