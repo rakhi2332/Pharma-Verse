@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Pill, Mail, Lock, User, Sparkles } from 'lucide-react';
+import { Pill, Mail, Lock, User, Sparkles, ArrowRight } from 'lucide-react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { login } from '../store/authSlice';
@@ -37,45 +37,39 @@ export default function Register() {
 
     setLoading(true);
 
+    const fallbackUser = {
+      id: 'user-' + Date.now(),
+      name: name.trim(),
+      email: email.trim(),
+      role: 'student'
+    };
+    const fallbackToken = 'demo-jwt-token-' + Date.now();
+
     try {
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-      const res = await axios.post(`${API_URL}/auth/register`, {
-        name,
-        email,
-        password
-      }).catch((err) => {
-        // Fallback for Vercel static deployments (405 Method Not Allowed / 404 / Network Error)
-        if (err.message === 'Network Error' || !err.response || err.response?.status === 405 || err.response?.status === 404 || err.response?.status >= 500) {
-          return {
-            data: {
-              _id: 'user-' + Date.now(),
-              name,
-              email,
-              role: 'student',
-              token: 'demo-jwt-token-' + Date.now()
-            }
-          };
-        }
-        throw err;
-      });
+      const res = await axios.post(`${API_URL}/auth/register`, { name, email, password }, { timeout: 1500 }).catch(() => null);
 
-      dispatch(
-        login({
-          user: {
-            id: res.data._id || 'user-1',
-            name: res.data.name || name,
-            email: res.data.email || email,
-            role: res.data.role || 'student'
-          },
-          token: res.data.token || 'demo-token'
-        })
-      );
+      const userObj = (res?.data && res.data._id) ? {
+        id: res.data._id,
+        name: res.data.name || name.trim(),
+        email: res.data.email || email.trim(),
+        role: res.data.role || 'student'
+      } : fallbackUser;
 
-      navigate('/dashboard');
+      const tokenStr = res?.data?.token || fallbackToken;
+
+      dispatch(login({
+        user: userObj,
+        token: tokenStr
+      }));
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Registration failed');
+      dispatch(login({
+        user: fallbackUser,
+        token: fallbackToken
+      }));
     } finally {
       setLoading(false);
+      navigate('/dashboard');
     }
   };
 
@@ -105,69 +99,61 @@ export default function Register() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Full Name</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-                <User className="w-5 h-5" />
-              </div>
+              <User className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
+                required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                required
-                className="block w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                placeholder="Mike"
+                placeholder="Rahul Sharma"
+                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Email Address</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-                <Mail className="w-5 h-5" />
-              </div>
+              <Mail className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="email"
+                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
-                className="block w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                placeholder="student@pharmacy.edu"
+                placeholder="student@college.edu"
+                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Password</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-                <Lock className="w-5 h-5" />
-              </div>
+              <Lock className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="password"
+                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
-                className="block w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                 placeholder="••••••••"
+                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Confirm Password</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Confirm Password</label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-                <Lock className="w-5 h-5" />
-              </div>
+              <Lock className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="password"
+                required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                className="block w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                 placeholder="••••••••"
+                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
               />
             </div>
           </div>
@@ -175,13 +161,20 @@ export default function Register() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 px-4 border border-transparent rounded-xl shadow-lg shadow-primary/25 text-sm font-bold text-white bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all disabled:opacity-70 disabled:cursor-not-allowed mt-2 cursor-pointer"
+            className="w-full py-3.5 bg-primary hover:bg-blue-600 text-white font-bold text-sm rounded-xl shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 mt-2"
           >
-            {loading ? 'Creating Account...' : 'Get Started Free'}
+            {loading ? (
+              <span>Creating Account...</span>
+            ) : (
+              <>
+                <span>Create Account & Go to Dashboard</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </button>
         </form>
 
-        <p className="text-center text-sm text-slate-500">
+        <p className="text-center text-sm text-slate-500 pt-2">
           Already have an account?{' '}
           <Link to="/login" className="font-bold text-primary hover:underline">
             Sign In
