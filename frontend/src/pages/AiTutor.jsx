@@ -45,6 +45,13 @@ export default function AiTutor() {
   const [calcType, setCalcType] = useState('young');
   const [calcInputs, setCalcInputs] = useState({ age: 8, adultDose: 500, weightKg: 25 });
   const [calcResult, setCalcResult] = useState(null);
+  const [geminiApiKey, setGeminiApiKey] = useState(() => localStorage.getItem('pharmaverse_gemini_key') || '');
+  const [showKeyModal, setShowKeyModal] = useState(false);
+
+  const saveGeminiKey = (key) => {
+    setGeminiApiKey(key);
+    localStorage.setItem('pharmaverse_gemini_key', key);
+  };
 
   const messagesEndRef = useRef(null);
 
@@ -182,7 +189,7 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
 
   const handleSendMessage = async (textOveride) => {
     const textToSend = textOveride || inputQuery;
-    if (!textToSend.trim()) return;
+    if (!textToSend || !textToSend.trim()) return;
 
     const userMessage = {
       id: Date.now(),
@@ -199,8 +206,9 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
       const res = await axios.post(`${API_BASE_URL}/ai-tutor/ask`, {
         question: textToSend,
         category: activeCategory !== 'All' ? activeCategory : undefined,
-        difficulty: difficultyLevel
-      }, { timeout: 4000 });
+        difficulty: difficultyLevel,
+        apiKey: geminiApiKey.trim() || undefined
+      }, { timeout: 12000 });
 
       if (res.data && res.data.answer) {
         const aiMessage = {
@@ -208,6 +216,7 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
           sender: 'ai',
           text: res.data.answer,
           topic: res.data.topic || 'Clinical Pharmacology',
+          source: res.data.source || (geminiApiKey ? 'Google Gemini AI' : 'PharmaVerse AI'),
           relatedTopics: res.data.relatedTopics || ['Pharmacology', 'GPAT Exam'],
           category: res.data.category || 'Pharmacology',
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -217,10 +226,54 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
         return;
       }
     } catch (err) {
-      console.warn('Backend AI Tutor server unreachable, generating client-side intelligence response...', err.message);
+      console.warn('Backend AI Tutor query failed or timed out, trying direct Gemini or client generator...', err.message);
     }
 
-    // Client-side fallback generator
+    // Direct Gemini Client-Side Fallback if user configured an API key in browser
+    if (geminiApiKey.trim()) {
+      try {
+        const promptText = `You are PharmaVerse AI, an expert Clinical Pharmacology Professor and GPAT Exam Mentor.
+Question: "${textToSend}"
+Focus Area: ${activeCategory}
+Academic Level: ${difficultyLevel}
+
+Provide a structured, highly academic Markdown response with:
+### 1. 📖 Core Definition
+### 2. 🔬 Mechanism of Action / SAR / Formula
+### 3. 🎯 High-Yield GPAT Exam Tips`;
+
+        const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey.trim()}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: promptText }] }]
+          })
+        });
+
+        if (geminiRes.ok) {
+          const gData = await geminiRes.json();
+          const gAnswer = gData.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (gAnswer) {
+            setMessages(prev => [...prev, {
+              id: Date.now() + 1,
+              sender: 'ai',
+              text: gAnswer,
+              topic: `Gemini AI: ${textToSend}`,
+              source: 'Google Gemini 1.5 Flash AI',
+              relatedTopics: ['Pharmacology SAR', 'GPAT High-Yield Notes', 'Clinical Posology'],
+              category: activeCategory,
+              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            }]);
+            setLoading(false);
+            return;
+          }
+        }
+      } catch (gErr) {
+        console.warn('Direct client Gemini fetch failed:', gErr.message);
+      }
+    }
+
+    // Client-side knowledge base fallback generator
     const clientResponse = generateClientAiTutorResponse(textToSend, activeCategory);
     setTimeout(() => {
       setMessages(prev => [...prev, clientResponse]);
@@ -302,20 +355,23 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 pb-16 flex flex-col font-sans">
+    <div className="min-h-screen bg-background text-text-main pb-16 flex flex-col font-sans transition-colors duration-300">
       <Navbar />
 
       {/* Top Banner Header */}
-      <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 border-b border-slate-800 px-6 py-6 pt-20">
+      <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 border-b border-blue-800/40 dark:border-slate-800 px-6 py-6 pt-20 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-blue-600/30 border border-blue-400/40 flex items-center justify-center text-blue-400 shadow-lg">
               <Bot className="w-6 h-6" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-300 border border-blue-400/30 uppercase tracking-wider">
                   24/7 Clinical AI Tutor
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-500/20 text-purple-300 border border-purple-400/30 uppercase tracking-wider flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-purple-400" /> Powered by Google Gemini AI
                 </span>
                 <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-400">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Online
@@ -329,10 +385,18 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
 
           {/* Controls */}
           <div className="flex items-center gap-3 flex-wrap">
+            <button
+              onClick={() => setShowKeyModal(true)}
+              className="px-3 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-xs font-extrabold flex items-center gap-1.5 shadow-md transition-all cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              {geminiApiKey ? 'Gemini Key Connected' : 'Configure Gemini AI Key'}
+            </button>
+
             <select
               value={difficultyLevel}
               onChange={(e) => setDifficultyLevel(e.target.value)}
-              className="bg-slate-900 text-slate-200 text-xs font-bold px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500"
+              className="bg-slate-900/80 text-slate-200 text-xs font-bold px-3 py-2 rounded-xl border border-slate-700/80 focus:outline-none focus:border-blue-500"
             >
               <option value="B.Pharm Undergraduate">B.Pharm Undergraduate</option>
               <option value="GPAT / NIPER Aspirant">GPAT / NIPER Aspirant</option>
@@ -341,12 +405,69 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
 
             <button
               onClick={handleClearChat}
-              className="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white rounded-xl border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="px-3 py-2 bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white rounded-xl border border-slate-700/80 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
             >
               <Trash2 className="w-3.5 h-3.5 text-rose-400" /> Reset Chat
             </button>
           </div>
         </div>
+
+        {/* Gemini Key Configuration Modal */}
+        {showKeyModal && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-slate-100">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-purple-400" /> Configure Google Gemini AI Key
+                </h3>
+                <button 
+                  onClick={() => setShowKeyModal(false)}
+                  className="text-slate-400 hover:text-white text-lg font-bold"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Connect your Google Gemini API Key to enable real-time generative AI answers powered by Google's latest <code className="bg-slate-800 text-purple-300 px-1.5 py-0.5 rounded">gemini-1.5-flash</code> model.
+              </p>
+
+              <div>
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+                  Gemini API Key:
+                </label>
+                <input
+                  type="password"
+                  value={geminiApiKey}
+                  onChange={(e) => setGeminiApiKey(e.target.value)}
+                  placeholder="AIzaSy..."
+                  className="w-full bg-slate-950 text-white text-xs px-3.5 py-2.5 rounded-xl border border-slate-700 focus:outline-none focus:border-purple-500 font-mono"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <button
+                  onClick={() => {
+                    saveGeminiKey('');
+                    setShowKeyModal(false);
+                  }}
+                  className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl transition-colors"
+                >
+                  Clear Key
+                </button>
+                <button
+                  onClick={() => {
+                    saveGeminiKey(geminiApiKey.trim());
+                    setShowKeyModal(false);
+                  }}
+                  className="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold rounded-xl shadow-md transition-colors"
+                >
+                  Save & Connect
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Main Content Layout */}
@@ -356,9 +477,9 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
         <div className="lg:col-span-4 space-y-6">
 
           {/* Category Filter Pills */}
-          <div className="bg-slate-900/90 p-4 rounded-3xl border border-slate-800 space-y-3 shadow-lg">
-            <h3 className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-              <Compass className="w-4 h-4 text-blue-400" /> Focus Subject Area
+          <div className="bg-card-bg dark:bg-slate-900/90 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-3 shadow-lg shadow-slate-200/50 dark:shadow-none transition-colors">
+            <h3 className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+              <Compass className="w-4 h-4 text-blue-500" /> Focus Subject Area
             </h3>
             <div className="flex flex-wrap gap-1.5">
               {CATEGORIES.map(cat => (
@@ -368,7 +489,7 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
                   className={`text-[11px] font-bold px-3 py-1.5 rounded-xl border transition-all cursor-pointer ${
                     activeCategory === cat
                       ? 'bg-blue-600 text-white border-blue-500 shadow-md shadow-blue-600/30'
-                      : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-white hover:bg-slate-700'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:text-blue-600 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700'
                   }`}
                 >
                   {cat}
@@ -378,52 +499,52 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
           </div>
 
           {/* High-Yield GPAT Prompts */}
-          <div className="bg-slate-900/90 p-4 rounded-3xl border border-slate-800 space-y-3 shadow-lg">
-            <h3 className="text-xs font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-amber-400" /> Suggested GPAT & PCI Queries
+          <div className="bg-card-bg dark:bg-slate-900/90 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-3 shadow-lg shadow-slate-200/50 dark:shadow-none transition-colors">
+            <h3 className="text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-amber-500" /> Suggested GPAT & PCI Queries
             </h3>
             <div className="space-y-2">
               {SUGGESTED_PROMPTS.map((prompt, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleSendMessage(prompt.text)}
-                  className="w-full text-left p-3 rounded-2xl bg-slate-800/80 hover:bg-blue-950/60 border border-slate-700/80 hover:border-blue-500/50 transition-all text-xs font-medium text-slate-300 hover:text-white flex items-start gap-2.5 group cursor-pointer"
+                  className="w-full text-left p-3 rounded-2xl bg-slate-50 hover:bg-blue-50/80 dark:bg-slate-800/80 dark:hover:bg-blue-950/60 border border-slate-200 dark:border-slate-700/80 hover:border-blue-400/50 transition-all text-xs font-medium text-slate-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-white flex items-start gap-2.5 group cursor-pointer"
                 >
                   <span className="text-base shrink-0 mt-0.5">{prompt.icon}</span>
                   <span className="flex-1 leading-relaxed">{prompt.text}</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-blue-400 shrink-0 mt-0.5" />
+                  <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 group-hover:text-blue-500 shrink-0 mt-0.5" />
                 </button>
               ))}
             </div>
           </div>
 
           {/* Embedded Pediatric Dosage Calculator */}
-          <div className="bg-slate-900/90 p-5 rounded-3xl border border-slate-800 space-y-4 shadow-lg">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-              <h3 className="text-xs font-black uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                <Calculator className="w-4 h-4 text-emerald-400" /> Pediatric Dose Calculator
+          <div className="bg-card-bg dark:bg-slate-900/90 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-4 shadow-lg shadow-slate-200/50 dark:shadow-none transition-colors">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+              <h3 className="text-xs font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                <Calculator className="w-4 h-4 text-emerald-500" /> Pediatric Dose Calculator
               </h3>
-              <span className="text-[10px] font-bold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-400/30">
+              <span className="text-[10px] font-bold bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-400/30">
                 Posology
               </span>
             </div>
 
-            <div className="grid grid-cols-3 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-[11px] font-bold">
+            <div className="grid grid-cols-3 gap-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-xl border border-slate-200 dark:border-slate-800 text-[11px] font-bold">
               <button
                 onClick={() => setCalcType('young')}
-                className={`py-1.5 rounded-lg transition-all ${calcType === 'young' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                className={`py-1.5 rounded-lg transition-all ${calcType === 'young' ? 'bg-blue-600 text-white' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
               >
                 Young's
               </button>
               <button
                 onClick={() => setCalcType('dilling')}
-                className={`py-1.5 rounded-lg transition-all ${calcType === 'dilling' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                className={`py-1.5 rounded-lg transition-all ${calcType === 'dilling' ? 'bg-blue-600 text-white' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
               >
                 Dilling's
               </button>
               <button
                 onClick={() => setCalcType('clark')}
-                className={`py-1.5 rounded-lg transition-all ${calcType === 'clark' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                className={`py-1.5 rounded-lg transition-all ${calcType === 'clark' ? 'bg-blue-600 text-white' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
               >
                 Clark's
               </button>
@@ -431,40 +552,40 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
                   Child Age (Years):
                 </label>
                 <input
                   type="number"
                   value={calcInputs.age}
                   onChange={(e) => setCalcInputs({ ...calcInputs, age: e.target.value })}
-                  className="w-full bg-slate-950 text-white px-3 py-2 rounded-xl border border-slate-700 text-xs font-bold focus:outline-none focus:border-blue-500"
+                  className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               {calcType === 'clark' && (
                 <div>
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                  <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
                     Child Weight (kg):
                   </label>
                   <input
                     type="number"
                     value={calcInputs.weightKg}
                     onChange={(e) => setCalcInputs({ ...calcInputs, weightKg: e.target.value })}
-                    className="w-full bg-slate-950 text-white px-3 py-2 rounded-xl border border-slate-700 text-xs font-bold focus:outline-none focus:border-blue-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold focus:outline-none focus:border-blue-500"
                   />
                 </div>
               )}
 
               <div>
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
                   Adult Dose (mg):
                 </label>
                 <input
                   type="number"
                   value={calcInputs.adultDose}
                   onChange={(e) => setCalcInputs({ ...calcInputs, adultDose: e.target.value })}
-                  className="w-full bg-slate-950 text-white px-3 py-2 rounded-xl border border-slate-700 text-xs font-bold focus:outline-none focus:border-blue-500"
+                  className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold focus:outline-none focus:border-blue-500"
                 />
               </div>
 
@@ -476,10 +597,10 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
               </button>
 
               {calcResult && (
-                <div className="p-3 bg-emerald-950/60 border border-emerald-500/40 rounded-xl space-y-1 text-emerald-200">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 block">Calculation Result:</span>
-                  <p className="text-sm font-black text-white">{calcResult.childDose} {calcResult.unit}</p>
-                  <p className="text-[11px] text-slate-300 leading-snug">{calcResult.explanation}</p>
+                <div className="p-3 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-500/40 rounded-xl space-y-1 text-emerald-800 dark:text-emerald-200">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">Calculation Result:</span>
+                  <p className="text-sm font-black text-slate-900 dark:text-white">{calcResult.childDose} {calcResult.unit}</p>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug">{calcResult.explanation}</p>
                 </div>
               )}
             </div>
@@ -488,48 +609,55 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
         </div>
 
         {/* RIGHT COLUMN: CHAT WINDOW */}
-        <div className="lg:col-span-8 flex flex-col h-[700px] bg-slate-900/90 rounded-3xl border border-slate-800 shadow-2xl overflow-hidden">
+        <div className="lg:col-span-8 flex flex-col h-[700px] bg-card-bg dark:bg-slate-900/90 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xl overflow-hidden transition-colors">
           
           {/* Chat Messages Body */}
-          <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 scrollbar-thin scrollbar-thumb-slate-800">
+          <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-800">
             {messages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {msg.sender === 'ai' && (
-                  <div className="w-8 h-8 rounded-xl bg-blue-600/30 border border-blue-400/40 flex items-center justify-center text-blue-400 shrink-0 mt-1">
+                  <div className="w-8 h-8 rounded-xl bg-blue-600/20 dark:bg-blue-600/30 border border-blue-400/40 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 mt-1">
                     <Bot className="w-4 h-4" />
                   </div>
                 )}
 
                 <div className={`max-w-[85%] space-y-2 ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
-                  {msg.topic && (
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30">
-                        {msg.topic}
-                      </span>
+                  {(msg.topic || msg.source) && (
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      {msg.topic && (
+                        <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-400/30">
+                          {msg.topic}
+                        </span>
+                      )}
+                      {msg.source && (
+                        <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-400/30 flex items-center gap-1">
+                          <Sparkles className="w-2.5 h-2.5 text-purple-500" /> {msg.source}
+                        </span>
+                      )}
                     </div>
                   )}
 
                   <div className={`p-4 rounded-3xl text-sm leading-relaxed ${
                     msg.sender === 'user'
                       ? 'bg-blue-600 text-white rounded-tr-none shadow-lg shadow-blue-600/20'
-                      : 'bg-slate-950 text-slate-200 border border-slate-800 rounded-tl-none space-y-3'
+                      : 'bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-200 border border-slate-200/80 dark:border-slate-800 rounded-tl-none space-y-3 shadow-sm'
                   }`}>
                     <div className="whitespace-pre-wrap font-sans leading-relaxed">
                       {msg.text}
                     </div>
 
                     {msg.sender === 'ai' && msg.relatedTopics && (
-                      <div className="pt-3 border-t border-slate-800/80 space-y-1.5">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Related Concepts:</span>
+                      <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 space-y-1.5">
+                        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Related Concepts:</span>
                         <div className="flex flex-wrap gap-1.5">
                           {msg.relatedTopics.map((rel, rIdx) => (
                             <button
                               key={rIdx}
                               onClick={() => handleSendMessage(`Explain ${rel} in detail.`)}
-                              className="text-[10px] font-semibold bg-slate-900 hover:bg-blue-900/40 text-blue-300 border border-slate-700 px-2 py-0.5 rounded-md transition-colors cursor-pointer"
+                              className="text-[10px] font-semibold bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-900/40 text-blue-600 dark:text-blue-300 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded-md transition-colors cursor-pointer shadow-xs"
                             >
                               + {rel}
                             </button>
@@ -540,22 +668,22 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
                   </div>
 
                   {/* Message Footer Actions */}
-                  <div className="flex items-center gap-3 px-1 text-[10px] text-slate-400 font-medium">
+                  <div className="flex items-center gap-3 px-1 text-[10px] text-slate-400 dark:text-slate-400 font-medium">
                     <span>{msg.time}</span>
                     {msg.sender === 'ai' && (
                       <>
                         <button
                           onClick={() => handleTextToSpeech(msg.id, msg.text)}
-                          className={`hover:text-blue-400 flex items-center gap-1 cursor-pointer ${speakingId === msg.id ? 'text-blue-400 font-bold' : ''}`}
+                          className={`hover:text-blue-500 flex items-center gap-1 cursor-pointer ${speakingId === msg.id ? 'text-blue-500 font-bold' : ''}`}
                         >
-                          {speakingId === msg.id ? <VolumeX className="w-3 h-3 text-rose-400" /> : <Volume2 className="w-3 h-3" />}
+                          {speakingId === msg.id ? <VolumeX className="w-3 h-3 text-rose-500" /> : <Volume2 className="w-3 h-3" />}
                           <span>{speakingId === msg.id ? 'Stop Voice' : 'Listen'}</span>
                         </button>
                         <button
                           onClick={() => handleCopyText(msg.id, msg.text)}
-                          className="hover:text-blue-400 flex items-center gap-1 cursor-pointer"
+                          className="hover:text-blue-500 flex items-center gap-1 cursor-pointer"
                         >
-                          {copiedId === msg.id ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                          {copiedId === msg.id ? <Check className="w-3 h-3 text-emerald-500" /> : <Copy className="w-3 h-3" />}
                           <span>{copiedId === msg.id ? 'Copied' : 'Copy'}</span>
                         </button>
                       </>
@@ -564,7 +692,7 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
                 </div>
 
                 {msg.sender === 'user' && (
-                  <div className="w-8 h-8 rounded-xl bg-purple-600/30 border border-purple-400/40 flex items-center justify-center text-purple-300 shrink-0 mt-1">
+                  <div className="w-8 h-8 rounded-xl bg-purple-600/20 dark:bg-purple-600/30 border border-purple-400/40 flex items-center justify-center text-purple-600 dark:text-purple-300 shrink-0 mt-1">
                     <User className="w-4 h-4" />
                   </div>
                 )}
@@ -573,10 +701,10 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
 
             {loading && (
               <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-xl bg-blue-600/30 border border-blue-400/40 flex items-center justify-center text-blue-400 shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-blue-600/20 dark:bg-blue-600/30 border border-blue-400/40 flex items-center justify-center text-blue-500 dark:text-blue-400 shrink-0">
                   <Bot className="w-4 h-4" />
                 </div>
-                <div className="p-4 bg-slate-950 rounded-3xl rounded-tl-none border border-slate-800 flex items-center gap-2 text-xs text-blue-400 font-semibold">
+                <div className="p-4 bg-slate-100 dark:bg-slate-950 rounded-3xl rounded-tl-none border border-slate-200 dark:border-slate-800 flex items-center gap-2 text-xs text-blue-600 dark:text-blue-400 font-semibold shadow-xs">
                   <RefreshCw className="w-4 h-4 animate-spin" />
                   <span>Synthesizing Pharmacology Response...</span>
                 </div>
@@ -587,7 +715,7 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
           </div>
 
           {/* Input Footer */}
-          <div className="p-4 bg-slate-950 border-t border-slate-800">
+          <div className="p-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 transition-colors">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -600,7 +728,7 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
                 value={inputQuery}
                 onChange={(e) => setInputQuery(e.target.value)}
                 placeholder="Ask about drug mechanisms, SAR structures, equations, or GPAT questions..."
-                className="flex-1 bg-slate-900 text-white placeholder-slate-500 text-xs md:text-sm px-4 py-3.5 rounded-2xl border border-slate-800 focus:border-blue-500 focus:outline-none shadow-inner"
+                className="flex-1 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs md:text-sm px-4 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:outline-none shadow-inner"
               />
               <button
                 type="submit"

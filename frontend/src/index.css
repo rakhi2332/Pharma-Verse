@@ -9,6 +9,15 @@
   --text-muted: #475569; /* Slate 600 */
 }
 
+html.dark {
+  --primary: #3b82f6; /* Blue 500 */
+  --primary-hover: #60a5fa; /* Blue 400 */
+  --background: #0b0f19; /* Ultra Dark Slate */
+  --card-bg: #151d30; /* Dark Slate Card */
+  --text-main: #f8fafc; /* Slate 50 */
+  --text-muted: #94a3b8; /* Slate 400 */
+}
+
 @theme {
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
@@ -28,4 +37,12 @@ body {
   color: var(--text-main);
   font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark body {
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(15, 23, 42, 0.95) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(30, 41, 59, 0.9) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(15, 23, 42, 0.95) 0px, transparent 50%);
 }

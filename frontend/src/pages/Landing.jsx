@@ -11,14 +11,19 @@ import {
   ShieldAlert, 
   Sparkles,
   ArrowRight,
-  FileText
+  FileText,
+  Sun,
+  Moon
 } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Landing() {
+  const { theme, toggleTheme } = useTheme();
+
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background text-text-main flex flex-col transition-colors">
       {/* Navbar */}
-      <nav className="flex justify-between items-center p-4 md:p-6 lg:px-12 bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 shadow-sm">
+      <nav className="flex justify-between items-center p-4 md:p-6 lg:px-12 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 dark:border-slate-800 shadow-sm transition-colors">
         <Link to="/" className="flex items-center gap-2 group shrink-0">
           <Pill className="text-primary w-8 h-8 group-hover:rotate-12 transition-transform duration-300" />
           <span className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent">PharmaVerse</span>
@@ -43,10 +48,15 @@ export default function Landing() {
           <Link to="/gpat" className="hover:text-primary transition-colors">GPAT Prep</Link>
         </div>
 
-        <div className="flex gap-3 items-center">
-          <Link to="/dashboard" className="px-5 py-2.5 bg-primary text-white text-sm font-bold rounded-full hover:bg-primary-hover shadow-lg shadow-primary/30 transition-all hover:scale-105 active:scale-95 cursor-pointer">
-            Go to Student Dashboard
-          </Link>
+        {/* Theme Toggle Button */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={toggleTheme}
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            className="p-2.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-amber-400 transition-all cursor-pointer shadow-sm hover:scale-105 active:scale-95"
+          >
+            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
+          </button>
         </div>
       </nav>
 

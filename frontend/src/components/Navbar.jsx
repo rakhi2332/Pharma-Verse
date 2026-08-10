@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Pill, Search, X, BookOpen, Brain, Scan, Activity, Award, Calendar, Layers } from 'lucide-react';
+import { Pill, Search, X, BookOpen, Brain, Scan, Activity, Award, Calendar, Layers, Sun, Moon } from 'lucide-react';
 import RelaxationMusicPlayer from './RelaxationMusicPlayer';
+import { useTheme } from '../context/ThemeContext';
 
 const SEARCH_DATABASE = [
   { title: 'Pharmaceutics I (BP103T)', type: 'Subject & PDF Notes', url: '/subjects/bp103t/content', icon: BookOpen, tags: ['pharmaceutics', 'dosage forms', 'posology', 'monophasic', 'biphasic', 'suppositories', 'bp103t'] },
@@ -21,6 +22,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const searchRef = useRef(null);
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   const filteredResults = query.trim() === '' ? [] : SEARCH_DATABASE.filter(item => 
     item.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -45,7 +47,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="flex justify-between items-center px-6 lg:px-12 py-4 bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200/80 shadow-sm gap-4">
+    <nav className="flex justify-between items-center px-6 lg:px-12 py-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200/80 dark:border-slate-800 shadow-sm gap-4 transition-colors">
       {/* Brand Logo */}
       <Link to="/" className="flex items-center gap-2.5 group shrink-0">
         <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
@@ -59,88 +61,89 @@ export default function Navbar() {
       {/* Global Search Bar */}
       <div className="relative flex-1 max-w-md mx-2 md:mx-6" ref={searchRef}>
         <div className="relative flex items-center">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
+          <Search className="w-4 h-4 absolute left-3.5 text-slate-400 dark:text-slate-500 pointer-events-none" />
           <input
             type="text"
+            placeholder="Search subjects, notes, tools..."
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
               setIsOpen(true);
             }}
             onFocus={() => setIsOpen(true)}
-            placeholder="Search subjects, PDF notes, AI tools, GPAT..."
-            className="w-full pl-10 pr-9 py-2 bg-slate-100/80 focus:bg-white text-slate-800 placeholder-slate-400 text-xs sm:text-sm font-medium rounded-full border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all shadow-inner"
+            className="w-full pl-10 pr-10 py-2 text-xs sm:text-sm bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 rounded-full border border-transparent focus:border-blue-500 focus:bg-white dark:focus:bg-slate-800 focus:outline-none transition-all shadow-inner"
           />
           {query && (
             <button
-              onClick={() => {
-                setQuery('');
-                setIsOpen(false);
-              }}
-              className="absolute right-3 text-slate-400 hover:text-slate-600 p-0.5 rounded-full hover:bg-slate-200 transition-colors"
+              onClick={() => setQuery('')}
+              className="absolute right-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-4 h-4" />
             </button>
           )}
         </div>
 
-        {/* Live Search Results Dropdown */}
-        {isOpen && query.trim() !== '' && (
-          <div className="absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl border border-slate-200 shadow-2xl overflow-hidden z-50 max-h-80 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
-            <div className="p-2 border-b border-slate-100 bg-slate-50 flex items-center justify-between text-xs text-slate-500 font-semibold px-3">
-              <span>Matching Search Results ({filteredResults.length})</span>
-              <span className="font-mono text-[10px] bg-slate-200 px-1.5 py-0.5 rounded">Press Esc to close</span>
-            </div>
-
-            {filteredResults.length === 0 ? (
-              <div className="p-6 text-center text-slate-400 text-sm">
-                No matching subjects or notes found for "<span className="font-semibold text-slate-600">{query}</span>"
+        {/* Dropdown Results */}
+        {isOpen && filteredResults.length > 0 && (
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 overflow-hidden z-50 max-h-96 overflow-y-auto">
+            <div className="p-2">
+              <div className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                Quick Search Results ({filteredResults.length})
               </div>
-            ) : (
-              <div className="p-1.5 space-y-1">
-                {filteredResults.map((item, index) => {
-                  const ItemIcon = item.icon;
-                  return (
-                    <button
-                      key={index}
-                      onClick={() => handleSelectResult(item.url)}
-                      className="w-full text-left p-2.5 rounded-xl hover:bg-blue-50/80 transition-colors flex items-center gap-3 group border border-transparent hover:border-blue-100 cursor-pointer"
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                        <ItemIcon className="w-4 h-4" />
+              {filteredResults.map((item, idx) => {
+                const IconComponent = item.icon;
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => handleSelectResult(item.url)}
+                    className="w-full text-left p-3 hover:bg-blue-50/70 dark:hover:bg-slate-700/70 rounded-xl transition-colors flex items-center justify-between group cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-blue-100 dark:bg-slate-700 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <IconComponent className="w-4 h-4" />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-blue-600 truncate transition-colors">
+                      <div>
+                        <div className="font-semibold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 text-xs sm:text-sm">
                           {item.title}
-                        </p>
-                        <p className="text-[11px] text-slate-400 font-medium">
+                        </div>
+                        <div className="text-[11px] text-slate-400 dark:text-slate-500">
                           {item.type}
-                        </p>
+                        </div>
                       </div>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+                    </div>
+                    <span className="text-slate-300 dark:text-slate-600 group-hover:text-blue-500 group-hover:translate-x-1 transition-all text-xs font-bold">
+                      →
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         )}
       </div>
 
       {/* Nav Links */}
-      <div className="hidden lg:flex items-center gap-5 text-slate-600 font-medium text-xs sm:text-sm">
-        <Link to="/dashboard" className="text-blue-600 font-bold hover:text-blue-700 transition-colors flex items-center gap-1">
-          <BookOpen className="w-3.5 h-3.5 text-blue-600" /> Dashboard
+      <div className="hidden lg:flex items-center gap-5 text-slate-600 dark:text-slate-300 font-medium text-xs sm:text-sm">
+        <Link to="/dashboard" className="text-blue-600 dark:text-blue-400 font-bold hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex items-center gap-1">
+          <BookOpen className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" /> Dashboard
         </Link>
-        <Link to="/semesters" className="hover:text-blue-600 transition-colors font-semibold">Semesters</Link>
-        <Link to="/study-planner" className="hover:text-blue-600 transition-colors">Planner</Link>
-        <Link to="/medicine-scanner" className="hover:text-blue-600 transition-colors">Scanner</Link>
-        <Link to="/ai-tutor" className="hover:text-blue-600 transition-colors font-semibold flex items-center gap-1">
-          <Brain className="w-3.5 h-3.5 text-indigo-600" /> AI Tutor
+        <Link to="/semesters" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-semibold">Semesters</Link>
+        <Link to="/study-planner" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Planner</Link>
+        <Link to="/medicine-scanner" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Scanner</Link>
+        <Link to="/ai-tutor" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-semibold flex items-center gap-1">
+          <Brain className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" /> AI Tutor
         </Link>
       </div>
 
-      {/* Global Relaxation Music Player & Auth Buttons */}
+      {/* Theme Toggle, Music Player & Auth Buttons */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <button
+          onClick={toggleTheme}
+          title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-amber-400 transition-all cursor-pointer shadow-sm hover:scale-105 active:scale-95"
+        >
+          {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
+        </button>
         <RelaxationMusicPlayer />
         <Link to="/dashboard" className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs sm:text-sm rounded-full hover:from-blue-500 hover:to-indigo-500 shadow-md shadow-blue-500/25 transition-all hover:scale-105 active:scale-95 cursor-pointer">
           My Dashboard

@@ -221,17 +221,94 @@ When evaluating **${qClean}**, consider the following core principles:
   };
 }
 
+// Helper: Call Google Gemini AI REST API
+async function getGeminiAiResponse(question, category, difficulty, userApiKey) {
+  const apiKey = userApiKey || process.env.GEMINI_API_KEY;
+  if (!apiKey || apiKey === 'your_gemini_api_key_here') {
+    return null; // Fallback to local knowledge engine if key is not configured
+  }
+
+  const promptText = `You are PharmaVerse AI, an expert Clinical Pharmacology Professor, B.Pharm/Pharm.D Educator, and GPAT Exam Mentor.
+Answer the following B.Pharmacy / GPAT question with utmost academic precision and formatting in Markdown:
+
+Question: "${question}"
+Focus Area: ${category || 'General B.Pharm & Clinical Sciences'}
+Target Academic Level: ${difficulty || 'B.Pharm Undergraduate'}
+
+Structure your response into clear Markdown sections:
+### 1. 📖 Core Definition & Scientific Concept
+### 2. 🔬 Mechanism of Action / SAR / Formulation / Equations (with equations in LaTeX if needed)
+### 3. 🎯 High-Yield GPAT & NIPER Exam Tips (Key points, flashcards, antidotes, or rate-limiting steps)
+### 4. 💊 Clinical Relevance & PCI Syllabus Takeaways
+
+Keep the tone encouraging, highly educational, structured, and easy to study.`;
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [
+        {
+          parts: [{ text: promptText }]
+        }
+      ],
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 1500
+      }
+    })
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(`Gemini API Error (${response.status}): ${errorData.error?.message || response.statusText}`);
+  }
+
+  const data = await response.json();
+  const answerText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+  if (!answerText) {
+    throw new Error('Gemini API returned an empty response.');
+  }
+
+  return {
+    source: 'Google Gemini 1.5 Flash AI',
+    topic: `Gemini AI: ${question}`,
+    category: category || 'Pharmacology',
+    answer: answerText,
+    relatedTopics: [
+      `Gemini High-Yield Study Notes on ${question}`,
+      'Pharmacology Drug Classification',
+      'GPAT Exam MCQs & Solutions'
+    ]
+  };
+}
+
 // POST /api/ai-tutor/ask
-router.post('/ask', (req, res) => {
+router.post('/ask', async (req, res) => {
   try {
-    const { question, category, difficulty } = req.body;
+    const { question, category, difficulty, apiKey } = req.body;
     if (!question || question.trim() === '') {
       return res.status(400).json({ error: 'Question is required' });
     }
 
-    const queryLower = question.toLowerCase().trim();
+    // 1. Try Google Gemini AI first if key exists
+    try {
+      const geminiResult = await getGeminiAiResponse(question, category, difficulty, apiKey);
+      if (geminiResult) {
+        return res.json({
+          success: true,
+          ...geminiResult
+        });
+      }
+    } catch (geminiErr) {
+      console.warn('Google Gemini API call failed, falling back to built-in knowledge base:', geminiErr.message);
+    }
 
-    // Find best match in knowledge base
+    // 2. Fallback: Find best match in built-in knowledge base
+    const queryLower = question.toLowerCase().trim();
     const match = knowledgeTopics.find(item => 
       item.keywords.some(keyword => queryLower.includes(keyword))
     );
@@ -239,6 +316,7 @@ router.post('/ask', (req, res) => {
     if (match) {
       return res.json({
         success: true,
+        source: 'PharmaVerse Knowledge Engine',
         topic: match.topic,
         category: match.category,
         answer: match.response,
@@ -250,11 +328,12 @@ router.post('/ask', (req, res) => {
       });
     }
 
-    // Dynamic smart answer generator
+    // 3. Fallback: Dynamic smart answer generator
     const generated = buildSmartDynamicAnswer(question, category, difficulty);
 
     res.json({
       success: true,
+      source: 'PharmaVerse Knowledge Engine',
       topic: generated.topic,
       category: generated.category,
       answer: generated.answer,
