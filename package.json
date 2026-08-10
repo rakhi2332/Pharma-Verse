@@ -4,6 +4,8 @@
   "description": "PharmaVerse B.Pharmacy AI Platform Root Workspace",
   "scripts": {
     "dev": "npm run dev --prefix frontend",
+    "server": "node backend/server.js",
+    "dev:all": "start start_website.bat",
     "start": "node backend/server.js",
     "build": "npm run build --prefix frontend"
   }
