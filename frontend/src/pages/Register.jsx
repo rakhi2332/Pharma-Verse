@@ -16,7 +16,7 @@ export default function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
 
@@ -37,40 +37,25 @@ export default function Register() {
 
     setLoading(true);
 
-    const fallbackUser = {
+    const userObj = {
       id: 'user-' + Date.now(),
       name: name.trim(),
       email: email.trim(),
       role: 'student'
     };
-    const fallbackToken = 'demo-jwt-token-' + Date.now();
+    const tokenStr = 'demo-jwt-token-' + Date.now();
 
-    try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-      const res = await axios.post(`${API_URL}/auth/register`, { name, email, password }, { timeout: 1500 }).catch(() => null);
+    // Instant zero-delay session login & redirection
+    dispatch(login({
+      user: userObj,
+      token: tokenStr
+    }));
 
-      const userObj = (res?.data && res.data._id) ? {
-        id: res.data._id,
-        name: res.data.name || name.trim(),
-        email: res.data.email || email.trim(),
-        role: res.data.role || 'student'
-      } : fallbackUser;
+    // Background sync if API backend is live
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    axios.post(`${API_URL}/auth/register`, { name, email, password }, { timeout: 1000 }).catch(() => {});
 
-      const tokenStr = res?.data?.token || fallbackToken;
-
-      dispatch(login({
-        user: userObj,
-        token: tokenStr
-      }));
-    } catch (err) {
-      dispatch(login({
-        user: fallbackUser,
-        token: fallbackToken
-      }));
-    } finally {
-      setLoading(false);
-      navigate('/dashboard');
-    }
+    navigate('/dashboard');
   };
 
   return (
@@ -163,14 +148,8 @@ export default function Register() {
             disabled={loading}
             className="w-full py-3.5 bg-primary hover:bg-blue-600 text-white font-bold text-sm rounded-xl shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 mt-2"
           >
-            {loading ? (
-              <span>Creating Account...</span>
-            ) : (
-              <>
-                <span>Create Account & Go to Dashboard</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
+            <span>Create Account & Go to Dashboard</span>
+            <ArrowRight className="w-4 h-4" />
           </button>
         </form>
 

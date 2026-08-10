@@ -9,11 +9,10 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
 
@@ -22,44 +21,27 @@ export default function Login() {
       return;
     }
 
-    setLoading(true);
-
     const userName = email.split('@')[0];
     const formattedName = userName ? (userName.charAt(0).toUpperCase() + userName.slice(1)) : 'Pharma Student';
-    const fallbackUser = {
+    const userObj = {
       id: 'user-' + Date.now(),
       name: formattedName,
-      email: email,
+      email: email.trim(),
       role: 'student'
     };
-    const fallbackToken = 'demo-jwt-token-' + Date.now();
+    const tokenStr = 'demo-jwt-token-' + Date.now();
 
-    try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-      const res = await axios.post(`${API_URL}/auth/login`, { email, password }, { timeout: 1500 }).catch(() => null);
+    // Instant zero-delay session login & redirection
+    dispatch(login({
+      user: userObj,
+      token: tokenStr
+    }));
 
-      const userObj = (res?.data && res.data._id) ? {
-        id: res.data._id,
-        name: res.data.name || formattedName,
-        email: res.data.email || email,
-        role: res.data.role || 'student'
-      } : fallbackUser;
+    // Background sync if API backend is live
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    axios.post(`${API_URL}/auth/login`, { email, password }, { timeout: 1000 }).catch(() => {});
 
-      const tokenStr = res?.data?.token || fallbackToken;
-
-      dispatch(login({
-        user: userObj,
-        token: tokenStr
-      }));
-    } catch (err) {
-      dispatch(login({
-        user: fallbackUser,
-        token: fallbackToken
-      }));
-    } finally {
-      setLoading(false);
-      navigate('/dashboard');
-    }
+    navigate('/dashboard');
   };
 
   return (
@@ -118,17 +100,10 @@ export default function Login() {
 
           <button
             type="submit"
-            disabled={loading}
-            className="w-full py-3.5 px-4 bg-primary hover:bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-primary/25 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+            className="w-full py-3.5 px-4 bg-primary hover:bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-primary/25 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
           >
-            {loading ? (
-              <span>Signing In...</span>
-            ) : (
-              <>
-                <span>Sign In to Dashboard</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
+            <span>Sign In to Dashboard</span>
+            <ArrowRight className="w-4 h-4" />
           </button>
         </form>
 
