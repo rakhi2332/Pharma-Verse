@@ -334,7 +334,7 @@ export default function ContentView() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('syllabus'); // 'syllabus' | 'videos'
-  const [expandedUnit, setExpandedUnit] = useState(null);
+  const [expandedUnit, setExpandedUnit] = useState(1);
   const [expandedTopic, setExpandedTopic] = useState(null);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [selectedPdf, setSelectedPdf] = useState(null);
