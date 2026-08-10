@@ -20,7 +20,8 @@ import {
 } from 'lucide-react';
 
 export default function Dashboard() {
-  const { user } = useSelector((state) => state.auth);
+  const authState = useSelector((state) => state?.auth) || {};
+  const user = authState.user || null;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
