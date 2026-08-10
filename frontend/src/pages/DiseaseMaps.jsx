@@ -278,6 +278,313 @@ const FALLBACK_DISEASE_MAPS = [
     gpatMindMapTips: [
       'Theophylline mechanism: Non-selective PDE-3/4 inhibitor and adenosine A1/A2A antagonist.'
     ]
+  },
+  {
+    id: 'epilepsy-seizures',
+    diseaseName: 'Epilepsy & Seizure Disorders',
+    category: 'Central Nervous System',
+    icdCode: 'G40',
+    pathophysiology: 'Paroxysmal, abnormal, excessive, synchronous neuronal discharges in the cerebral cortex caused by GABAergic inhibition deficit or Glutamatergic excitation surplus.',
+    diagnosticCriteria: [
+      'EEG: Spike-and-wave discharges',
+      'Brain MRI: Structural lesion ruling out tumor / stroke'
+    ],
+    lifestyleInterventions: [
+      'Strict Medication Adherence (Do not skip doses)',
+      'Sleep Hygiene & Avoidance of Strobe Flash Lights'
+    ],
+    treatmentAlgorithm: [
+      {
+        step: 1,
+        stage: 'Seizure Type Targeted Monotherapy',
+        recommendation: 'Select Antiepileptic Drug (AED) based on Focal vs Generalized onset.',
+        drugClasses: [
+          {
+            className: 'Broad-Spectrum AEDs',
+            mechanism: 'Blocks voltage-gated Na+ channels, T-type Ca2+ channels, & increases GABA levels.',
+            drugs: [
+              { name: 'Sodium Valproate', dose: '500 - 1500 mg daily in divided doses', note: 'Broad spectrum for generalized tonic-clonic & absence' },
+              { name: 'Levetiracetam', dose: '500 - 1500 mg BD', note: 'Binds SV2A synaptic vesicle protein' }
+            ],
+            keySideEffect: 'Hepatotoxicity, pancreatitis, weight gain, alopecia, teratogenicity (neural tube defects).',
+            contraindication: 'Pregnancy (High risk of Spina Bifida).'
+          },
+          {
+            className: 'Sodium Channel Blockers',
+            mechanism: 'Prolongs inactivated state of voltage-gated Na+ channels.',
+            drugs: [
+              { name: 'Phenytoin', dose: '300 - 400 mg daily', note: 'Exhibits zero-order Michaelis-Menten kinetics at therapeutic levels' },
+              { name: 'Carbamazepine', dose: '200 - 600 mg BD', note: 'First choice for focal seizures; Auto-inducer of CYP3A4' }
+            ],
+            keySideEffect: 'Gingival hyperplasia, hirsutism, megaloblastic anemia, Stevens-Johnson syndrome (HLA-B*1502).',
+            contraindication: 'Absence seizures (May worsen absence seizures).'
+          }
+        ]
+      }
+    ],
+    specialPopulations: [
+      { condition: 'Status Epilepticus Emergency', choice: 'IV Lorazepam (4mg) or Diazepam (10mg) -> IV Fosphenytoin -> IV Levetiracetam.' },
+      { condition: 'Absence Seizures in Children', choice: 'Ethosuximide (Blocks T-type Ca2+ channels) or Valproate.' }
+    ],
+    drugInteractions: [
+      'Phenytoin / Carbamazepine + Oral Contraceptive Pills: CYP enzyme induction leads to contraceptive failure.'
+    ],
+    monitoringParameters: [
+      'Serum Phenytoin trough level (10 - 20 mcg/mL); LFTs & CBC.'
+    ],
+    gpatMindMapTips: [
+      'Ethosuximide selectively blocks T-type Ca2+ channels in thalamic neurons (Drug of choice for Absence Seizures).',
+      'Phenytoin exhibits non-linear zero-order saturation kinetics at therapeutic concentrations.'
+    ]
+  },
+  {
+    id: 'parkinsons-disease',
+    diseaseName: 'Parkinson’s Disease',
+    category: 'Central Nervous System',
+    icdCode: 'G20',
+    pathophysiology: 'Progressive degeneration of dopaminergic neurons in the substantia nigra pars compacta, causing severe striatal dopamine deficiency & Lewy body alpha-synuclein aggregation.',
+    diagnosticCriteria: [
+      'Cardinal Triad: Resting Tremor ("Pill-rolling"), Rigidity ("Cogwheel"), Bradykinesia + Postural Instability'
+    ],
+    lifestyleInterventions: [
+      'Physical Therapy & Gait Training',
+      'High-Fiber Diet & Hydration for Constipation'
+    ],
+    treatmentAlgorithm: [
+      {
+        step: 1,
+        stage: 'Dopaminergic Replacement Therapy',
+        recommendation: 'Levodopa + Carbidopa combination.',
+        drugClasses: [
+          {
+            className: 'Dopamine Precursor + Peripheral DOPA Decarboxylase Inhibitor',
+            mechanism: 'Levodopa crosses BBB via L-amino acid transporter and converts to Dopamine; Carbidopa prevents peripheral metabolism.',
+            drugs: [
+              { name: 'Levodopa + Carbidopa', dose: '100/25 mg TID', note: 'Gold standard symptomatic therapy' }
+            ],
+            keySideEffect: 'Dyskinesias, "On-Off" motor fluctuations, nausea, hallucinations.',
+            contraindication: 'Narrow-angle glaucoma, non-selective MAO inhibitors.'
+          }
+        ]
+      }
+    ],
+    specialPopulations: [
+      { condition: 'Young-onset Parkinson\'s (< 60 yrs)', choice: 'Initiate Dopamine Agonists (Pramipexole / Ropinirole) to delay Levodopa dyskinesias.' }
+    ],
+    drugInteractions: [
+      'Levodopa + Pyridoxine (Vitamin B6): Vitamin B6 enhances peripheral decarboxylation of Levodopa, reducing brain delivery.'
+    ],
+    monitoringParameters: [
+      'UPDRS score & motor fluctuation tracking.'
+    ],
+    gpatMindMapTips: [
+      'Carbidopa does NOT cross the Blood-Brain Barrier (BBB); it selectively inhibits peripheral DOPA decarboxylase.'
+    ]
+  },
+  {
+    id: 'chronic-kidney-disease',
+    diseaseName: 'Chronic Kidney Disease (CKD) & AKI',
+    category: 'Renal & Urinary System',
+    icdCode: 'N18',
+    pathophysiology: 'Progressive, irreversible loss of nephron function (> 3 months) marked by glomerulosclerosis, tubulointerstitial fibrosis, uremic toxin retention, and hyperphosphatemia.',
+    diagnosticCriteria: [
+      'eGFR < 60 mL/min/1.73m2 for > 3 months',
+      'Urine Albumin-to-Creatinine Ratio (uACR) ≥ 30 mg/g'
+    ],
+    lifestyleInterventions: [
+      'Dietary Protein Restriction: 0.6 – 0.8 g/kg/day in Stage 3-5 CKD',
+      'Phosphate & Potassium Dietary Restriction'
+    ],
+    treatmentAlgorithm: [
+      {
+        step: 1,
+        stage: 'Nephroprotection & Delaying Progression',
+        recommendation: 'ACEI/ARB + SGLT2 Inhibitor + Non-steroidal MRA.',
+        drugClasses: [
+          {
+            className: 'Renal Protective SGLT2 Inhibitors',
+            mechanism: 'Restores tubuloglomerular feedback -> reduces intraglomerular hyperfiltration pressure.',
+            drugs: [
+              { name: 'Dapagliflozin', dose: '10 mg OD', note: 'Approved down to eGFR 25 mL/min (DAPA-CKD trial)' }
+            ],
+            keySideEffect: 'Mycotic genital infection, mild volume depletion.',
+            contraindication: 'Polycystic Kidney Disease.'
+          }
+        ]
+      }
+    ],
+    specialPopulations: [
+      { condition: 'Renal Osteodystrophy & Hyperphosphatemia', choice: 'Sevelamer Carbonate (Non-calcium phosphate binder) + Calcitriol.' }
+    ],
+    drugInteractions: [
+      'NSAIDs + ACEIs + Diuretics: Severe acute decline in renal function ("Triple Whammy").'
+    ],
+    monitoringParameters: [
+      'eGFR & Serum Potassium every 3 months.'
+    ],
+    gpatMindMapTips: [
+      'Sevelamer is a non-absorbed polymeric phosphate binder that does NOT contain aluminum or calcium.'
+    ]
+  },
+  {
+    id: 'tuberculosis-dots',
+    diseaseName: 'Pulmonary Tuberculosis & DOTS Regimen',
+    category: 'Infectious Diseases System',
+    icdCode: 'A15',
+    pathophysiology: 'Infection by *Mycobacterium tuberculosis* intracellular bacilli forming caseating granulomas in pulmonary parenchyma.',
+    diagnosticCriteria: [
+      'Sputum Smear Acid-Fast Bacilli (AFB) Ziehl-Neelsen staining',
+      'GeneXpert MTB/RIF: Rapid DNA test detecting M. tuberculosis & Rifampicin resistance'
+    ],
+    lifestyleInterventions: [
+      'Strict Adherence to Daily Directly Observed Therapy (DOTS)',
+      'High-protein nutrition & mask ventilation'
+    ],
+    treatmentAlgorithm: [
+      {
+        step: 1,
+        stage: 'Intensive Phase (2 Months: HRZE)',
+        recommendation: 'Rifampicin + Isoniazid + Pyrazinamide + Ethambutol.',
+        drugClasses: [
+          {
+            className: 'First-Line Antitubercular Agents (HRZE)',
+            mechanism: 'Rifampicin inhibits DNA-dependent RNA polymerase; Isoniazid inhibits mycolic acid synthesis via InhA.',
+            drugs: [
+              { name: 'Rifampicin (R)', dose: '10 mg/kg (450 - 600 mg OD)', note: 'Potent CYP450 enzyme inducer; turns body fluids orange-red' },
+              { name: 'Isoniazid (H)', dose: '5 mg/kg (300 mg OD)', note: 'Causes peripheral neuropathy; co-administer Pyridoxine Vit B6' },
+              { name: 'Pyrazinamide (Z)', dose: '25 mg/kg daily', note: 'Sterilizing drug active in acidic intracellular phagolysosome' },
+              { name: 'Ethambutol (E)', dose: '15 mg/kg daily', note: 'Bacteriostatic; inhibits arabinosyl transferase' }
+            ],
+            keySideEffect: 'Hepatotoxicity (H, R, Z), Optic Neuritis / red-green color blindness (Ethambutol), Hyperuricemia (Pyrazinamide).',
+            contraindication: 'Pre-existing optic neuritis (Ethambutol).'
+          }
+        ]
+      }
+    ],
+    specialPopulations: [
+      { condition: 'Pregnancy TB', choice: 'Safe: Isoniazid, Rifampicin, Ethambutol + Pyridoxine. Avoid Pyrazinamide/Streptomycin.' }
+    ],
+    drugInteractions: [
+      'Rifampicin + Oral Contraceptives / Warfarin / Antiretrovirals: Potent CYP3A4 induction reduces plasma levels.'
+    ],
+    monitoringParameters: [
+      'Sputum smear conversion at end of 2 months; LFTs & Visual Acuity testing.'
+    ],
+    gpatMindMapTips: [
+      'Ethambutol is the ONLY bacteriostatic first-line anti-TB drug; all others (H, R, Z, S) are bactericidal.',
+      'Rifampicin selectively inhibits bacterial DNA-dependent RNA polymerase enzyme.'
+    ]
+  },
+  {
+    id: 'rheumatoid-arthritis',
+    diseaseName: 'Rheumatoid Arthritis & Gout',
+    category: 'Musculoskeletal System',
+    icdCode: 'M05 / M10',
+    pathophysiology: 'Autoimmune chronic inflammatory synovitis producing pannus formation & joint erosion (RA); or Monosodium urate crystal deposition in synovial fluid (Gout).',
+    diagnosticCriteria: [
+      'RA: Anti-CCP antibodies (High specificity) + Rheumatoid Factor (RF) + Elevated ESR/CRP',
+      'Gout: Serum Uric Acid > 6.8 mg/dL + Synovial Fluid needle-shaped negatively birefringent crystals'
+    ],
+    lifestyleInterventions: [
+      'Low Purine Diet (Avoid organ meats, seafood, beer for Gout)',
+      'Joint preservation exercises & hydrotherapy'
+    ],
+    treatmentAlgorithm: [
+      {
+        step: 1,
+        stage: 'DMARD First-Line Therapy (Rheumatoid Arthritis)',
+        recommendation: 'Methotrexate Monotherapy + Folic Acid.',
+        drugClasses: [
+          {
+            className: 'Conventional Synthetic DMARDs (csDMARDs)',
+            mechanism: 'Methotrexate inhibits Dihydrofolate Reductase (DHFR) & AICAR transformylase -> accumulates adenosine.',
+            drugs: [
+              { name: 'Methotrexate (MTX)', dose: '7.5 - 25 mg ONCE WEEKLY', note: 'Anchor DMARD. Always prescribe Folic Acid 5mg next day!' },
+              { name: 'Hydroxychloroquine', dose: '200 - 400 mg OD', note: 'Mild DMARD; safe in pregnancy' }
+            ],
+            keySideEffect: 'Bone marrow suppression, mucosal ulceration, pulmonary fibrosis, retinal toxicity (HCQ).',
+            contraindication: 'Pregnancy (Teratogenic), severe liver cirrhosis.'
+          }
+        ]
+      },
+      {
+        step: 2,
+        stage: 'Chronic Gout Xanthine Oxidase Inhibitors',
+        recommendation: 'Allopurinol or Febuxostat.',
+        drugClasses: [
+          {
+            className: 'Xanthine Oxidase Inhibitors',
+            mechanism: 'Inhibits Xanthine Oxidase -> blocks hypoxanthine conversion to uric acid.',
+            drugs: [
+              { name: 'Allopurinol', dose: '100 - 300 mg OD', note: 'Prodrug converted to active Oxypurinol' }
+            ],
+            keySideEffect: 'Severe Hypersensitivity Syndrome (HLA-B*5801), acute gout flare initiation.',
+            contraindication: 'Co-administration with Azathioprine (fatal bone marrow toxicity).'
+          }
+        ]
+      }
+    ],
+    specialPopulations: [
+      { condition: 'Acute Gout Attack', choice: 'Colchicine (inhibits microtubule polymerization) or High-dose NSAID (Indomethacin). Avoid starting Allopurinol during acute attack.' }
+    ],
+    drugInteractions: [
+      'Allopurinol + Azathioprine / 6-Mercaptopurine: Xanthine oxidase metabolizes 6-MP. Allopurinol causes severe 6-MP toxicity. Reduce Azathioprine dose by 75%!'
+    ],
+    monitoringParameters: [
+      'Serum Uric Acid target < 6.0 mg/dL in Gout.',
+      'CBC, LFTs & Renal Function every 12 weeks for Methotrexate.'
+    ],
+    gpatMindMapTips: [
+      'Methotrexate inhibits Dihydrofolate Reductase (DHFR); rescue agent for toxicity is Leucovorin (Folinic Acid).',
+      'Allopurinol inhibits Xanthine Oxidase enzyme responsible for 6-Mercaptopurine metabolism.'
+    ]
+  },
+  {
+    id: 'anemia-disorders',
+    diseaseName: 'Anemia & Anticoagulation Disorders',
+    category: 'Hematology System',
+    icdCode: 'D50 / D51',
+    pathophysiology: 'Iron Deficiency Anemia: Inadequate hemoglobin synthesis due to depleted iron stores (Microcytic Hypochromic). Megaloblastic Anemia: Impaired DNA synthesis due to Vit B12 / Folate deficiency (Macrocytic).',
+    diagnosticCriteria: [
+      'Iron Deficiency: Low Hb, Low Ferritin (< 30 ng/mL), Low MCV (< 80 fL), High TIBC',
+      'Megaloblastic: High MCV (> 100 fL), Hypersegmented neutrophils, Low B12 / Folate'
+    ],
+    lifestyleInterventions: [
+      'Iron-rich Foods (Spinach, legumes, red meat) with Vitamin C (Ascorbic acid enhances Fe2+ absorption)',
+      'Avoid Tea/Coffee with meals (Tannins inhibit iron absorption)'
+    ],
+    treatmentAlgorithm: [
+      {
+        step: 1,
+        stage: 'Iron & Vitamin Replacement',
+        recommendation: 'Ferrous Salt Supplementation.',
+        drugClasses: [
+          {
+            className: 'Oral & Parenteral Iron Formulations',
+            mechanism: 'Replaces elemental iron required for Heme group synthesis in Hemoglobin.',
+            drugs: [
+              { name: 'Ferrous Sulfate', dose: '200 mg (60 mg elemental Fe) BD/TID', note: 'Best absorbed on empty stomach' },
+              { name: 'Cyanocobalamin (Vit B12)', dose: '1000 mcg IM weekly', note: 'Required for Pernicious Anemia (intrinsic factor deficiency)' }
+            ],
+            keySideEffect: 'Black stools, constipation, epigastric distress, metallic taste.',
+            contraindication: 'Hemochromatosis, Hemosiderosis.'
+          }
+        ]
+      }
+    ],
+    specialPopulations: [
+      { condition: 'Pernicious Anemia', choice: 'Parenteral Vit B12 (Cyanocobalamin IM) is mandatory due to absent Intrinsic Factor.' }
+    ],
+    drugInteractions: [
+      'Oral Iron + Antacids / Tetracyclines / Fluoroquinolones: Chelation insoluble complexes; space doses by 2-3 hours.'
+    ],
+    monitoringParameters: [
+      'Reticulocyte count surge in 7-10 days; Hb increase of 1 g/dL every 2-3 weeks.'
+    ],
+    gpatMindMapTips: [
+      'Ferrous (Fe2+) state is absorbed in duodenum; Ferric (Fe3+) must be converted to Fe2+ by duodenal cytochrome B (Dcytb).',
+      'Vitamin B12 deficiency causes Neurological Symptoms (Subacute Combined Degeneration of Spinal Cord), whereas Folate deficiency does NOT.'
+    ]
   }
 ];
 
@@ -323,7 +630,7 @@ export default function DiseaseMaps() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 text-text-main pb-24">
+    <div className="min-h-screen bg-background text-text-main pb-24 transition-colors">
       <Navbar />
 
       {/* Header Banner */}
@@ -341,15 +648,15 @@ export default function DiseaseMaps() {
           </div>
 
           <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white">
-            Disease-Drug Learning Pathways & Clinical Mind Maps
+            Comprehensive Disease & Treatment Algorithms
           </h1>
-          <p className="text-slate-300 text-sm md:text-base max-w-3xl leading-relaxed">
-            In-depth visual pharmacotherapeutics: Diagnostic lab criteria, etiology & pathophysiology, multi-step treatment algorithms, drug doses, mechanisms, special populations (pregnancy/renal), interactions, and GPAT high-yield tips.
+          <p className="text-slate-300 max-w-2xl text-sm md:text-base leading-relaxed">
+            Explore 9 organ system pathology maps, diagnostic criteria, step-by-step guideline-directed treatment algorithms, drug classes, contraindications, and GPAT exam flashcards.
           </p>
 
-          {/* Search Bar */}
-          <div className="max-w-xl relative pt-2">
-            <Search className="w-5 h-5 text-slate-400 absolute left-4 top-5" />
+          {/* Search Box */}
+          <div className="relative max-w-xl pt-2">
+            <Search className="w-5 h-5 absolute left-4 top-6 text-slate-400 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
@@ -370,10 +677,10 @@ export default function DiseaseMaps() {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer border ${
                 selectedCategory === cat
-                  ? 'bg-teal-600 text-white shadow-md shadow-teal-600/20'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+                  ? 'bg-teal-600 text-white border-teal-500 shadow-md shadow-teal-600/30'
+                  : 'bg-card-bg dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               {cat}
@@ -493,14 +800,14 @@ export default function DiseaseMaps() {
                   {/* Diagnostic Criteria & Lifestyle Interventions Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Diagnostic Criteria */}
-                    <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-3">
-                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-teal-600" /> Diagnostic Criteria & Lab Markers
+                    <div className="bg-card-bg dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3 transition-colors">
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-2">
+                        <FileText className="w-4 h-4 text-teal-600 dark:text-teal-400" /> Diagnostic Criteria & Lab Markers
                       </h3>
                       <ul className="space-y-2">
                         {selectedMap.diagnosticCriteria.map((item, idx) => (
-                          <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-700 font-semibold bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                            <CheckCircle className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+                          <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300 font-semibold bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-800">
+                            <CheckCircle className="w-4 h-4 text-teal-600 dark:text-teal-400 shrink-0 mt-0.5" />
                             <span>{item}</span>
                           </li>
                         ))}
@@ -508,14 +815,14 @@ export default function DiseaseMaps() {
                     </div>
 
                     {/* Lifestyle Interventions */}
-                    <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-3">
-                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                        <ClipboardList className="w-4 h-4 text-emerald-600" /> Lifestyle & Non-Pharm Interventions
+                    <div className="bg-card-bg dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3 transition-colors">
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-2">
+                        <ClipboardList className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Lifestyle & Non-Pharm Interventions
                       </h3>
                       <ul className="space-y-2">
                         {selectedMap.lifestyleInterventions.map((item, idx) => (
-                          <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-700 font-semibold bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-100">
-                            <Lightbulb className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                          <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300 font-semibold bg-emerald-50/50 dark:bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-100 dark:border-emerald-800/50">
+                            <Lightbulb className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                             <span>{item}</span>
                           </li>
                         ))}
@@ -525,22 +832,22 @@ export default function DiseaseMaps() {
 
                   {/* Treatment Algorithm Steps */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-                      <Pill className="w-5 h-5 text-teal-600" /> Stepwise Pharmacotherapeutic Treatment Algorithm
+                    <h3 className="text-lg font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                      <Pill className="w-5 h-5 text-teal-600 dark:text-teal-400" /> Stepwise Pharmacotherapeutic Treatment Algorithm
                     </h3>
 
                     {selectedMap.treatmentAlgorithm.map((alg, aIdx) => (
-                      <div key={aIdx} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-md space-y-4">
-                        <div className="flex items-center justify-between border-b border-slate-100 pb-3 flex-wrap gap-2">
+                      <div key={aIdx} className="bg-card-bg dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-md space-y-4 transition-colors">
+                        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 flex-wrap gap-2">
                           <div className="flex items-center gap-2.5">
-                            <span className="w-7 h-7 rounded-xl bg-teal-100 text-teal-800 font-black text-xs flex items-center justify-center">
+                            <span className="w-7 h-7 rounded-xl bg-teal-100 dark:bg-teal-950 text-teal-800 dark:text-teal-300 font-black text-xs flex items-center justify-center border border-teal-300 dark:border-teal-800">
                               S{alg.step}
                             </span>
-                            <h4 className="font-extrabold text-slate-900 text-sm md:text-base">
+                            <h4 className="font-extrabold text-slate-900 dark:text-white text-sm md:text-base">
                               {alg.stage}
                             </h4>
                           </div>
-                          <span className="text-xs font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-xl border border-teal-200">
+                          <span className="text-xs font-bold text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-950 px-3 py-1 rounded-xl border border-teal-200 dark:border-teal-800">
                             {alg.recommendation}
                           </span>
                         </div>
@@ -548,37 +855,37 @@ export default function DiseaseMaps() {
                         {/* Drug Classes Grid */}
                         <div className="space-y-4">
                           {alg.drugClasses.map((cls, cIdx) => (
-                            <div key={cIdx} className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+                            <div key={cIdx} className="p-4 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
                               <div className="flex items-center justify-between flex-wrap gap-2">
-                                <h5 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-                                  <Pill className="w-4 h-4 text-teal-600" /> {cls.className}
+                                <h5 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                                  <Pill className="w-4 h-4 text-teal-600 dark:text-teal-400" /> {cls.className}
                                 </h5>
                               </div>
 
-                              <p className="text-xs font-medium text-slate-600 bg-white p-2.5 rounded-xl border border-slate-100">
-                                <span className="font-bold text-slate-800">Mechanism of Action: </span> {cls.mechanism}
+                              <p className="text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-800">
+                                <span className="font-bold text-slate-800 dark:text-white">Mechanism of Action: </span> {cls.mechanism}
                               </p>
 
                               {/* Individual Drugs List */}
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                                 {cls.drugs.map((drug, dIdx) => (
-                                  <div key={dIdx} className="bg-white p-3 rounded-xl border border-slate-200/90 shadow-sm space-y-1">
+                                  <div key={dIdx} className="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-1">
                                     <div className="flex items-center justify-between">
-                                      <span className="font-extrabold text-xs text-slate-900">{drug.name}</span>
-                                      <span className="text-[10px] font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md border border-teal-100">{drug.dose}</span>
+                                      <span className="font-extrabold text-xs text-slate-900 dark:text-white">{drug.name}</span>
+                                      <span className="text-[10px] font-bold text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-950 px-2 py-0.5 rounded-md border border-teal-200 dark:border-teal-800">{drug.dose}</span>
                                     </div>
-                                    <p className="text-[11px] text-slate-500 font-medium">{drug.note}</p>
+                                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">{drug.note}</p>
                                   </div>
                                 ))}
                               </div>
 
                               {/* Side Effects & Contraindications */}
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs pt-1">
-                                <div className="p-2 bg-amber-50 rounded-xl border border-amber-100 text-amber-900 font-medium">
-                                  <span className="font-bold text-amber-950">Side Effects: </span> {cls.keySideEffect}
+                                <div className="p-2 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-200 dark:border-amber-800/50 text-amber-900 dark:text-amber-200 font-medium">
+                                  <span className="font-bold text-amber-950 dark:text-amber-300">Side Effects: </span> {cls.keySideEffect}
                                 </div>
-                                <div className="p-2 bg-rose-50 rounded-xl border border-rose-100 text-rose-900 font-medium">
-                                  <span className="font-bold text-rose-950">Contraindications: </span> {cls.contraindication}
+                                <div className="p-2 bg-rose-50 dark:bg-rose-950/40 rounded-xl border border-rose-200 dark:border-rose-800/50 text-rose-900 dark:text-rose-200 font-medium">
+                                  <span className="font-bold text-rose-950 dark:text-rose-300">Contraindications: </span> {cls.contraindication}
                                 </div>
                               </div>
                             </div>
@@ -591,28 +898,28 @@ export default function DiseaseMaps() {
                   {/* Special Populations & Interactions */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Special Populations */}
-                    <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-3">
-                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <div className="bg-card-bg dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3 transition-colors">
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-2">
                         <AlertTriangle className="w-4 h-4 text-amber-500" /> Special Populations & Comorbidities
                       </h3>
                       <div className="space-y-2">
                         {selectedMap.specialPopulations.map((sp, idx) => (
-                          <div key={idx} className="p-3 bg-amber-50/50 rounded-2xl border border-amber-100 text-xs space-y-1">
-                            <span className="font-extrabold text-amber-950 block">{sp.condition}</span>
-                            <p className="text-amber-900 font-medium">{sp.choice}</p>
+                          <div key={idx} className="p-3 bg-amber-50/50 dark:bg-amber-950/40 rounded-2xl border border-amber-100 dark:border-amber-800/50 text-xs space-y-1">
+                            <span className="font-extrabold text-amber-950 dark:text-amber-300 block">{sp.condition}</span>
+                            <p className="text-amber-900 dark:text-amber-200 font-medium">{sp.choice}</p>
                           </div>
                         ))}
                       </div>
                     </div>
 
                     {/* Drug Interactions */}
-                    <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-3">
-                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                        <ShieldAlert className="w-4 h-4 text-rose-600" /> High-Risk Clinical Drug Interactions
+                    <div className="bg-card-bg dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3 transition-colors">
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-2">
+                        <ShieldAlert className="w-4 h-4 text-rose-600 dark:text-rose-400" /> High-Risk Clinical Drug Interactions
                       </h3>
                       <div className="space-y-2">
                         {selectedMap.drugInteractions.map((di, idx) => (
-                          <div key={idx} className="p-3 bg-rose-50/50 rounded-2xl border border-rose-100 text-xs font-medium text-rose-900">
+                          <div key={idx} className="p-3 bg-rose-50/50 dark:bg-rose-950/40 rounded-2xl border border-rose-100 dark:border-rose-800/50 text-xs font-medium text-rose-900 dark:text-rose-200">
                             {di}
                           </div>
                         ))}

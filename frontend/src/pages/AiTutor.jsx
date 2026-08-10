@@ -64,7 +64,7 @@ export default function AiTutor() {
   }, [messages, loading]);
 
   const generateClientAiTutorResponse = (query, category) => {
-    const q = (query || '').toLowerCase();
+    const q = (query || '').toLowerCase().trim();
     
     let detectedCategory = category && category !== 'All' ? category : 'Pharmacology';
     let topicName = 'Clinical Pharmacology & Pharmacotherapeutics';
@@ -117,6 +117,135 @@ export default function AiTutor() {
 * **Tox Sign**: Tinnitus (ringing in ears) is the earliest clinical sign of salicylate toxicity.`;
       relatedTopics = ['Prostaglandin Synthesis Pathway', 'Selective COX-2 Inhibitors (Celecoxib)', 'Platelet Aggregation Inhibitors', 'Peptic Ulcer Prevention'];
     }
+    else if (q.includes('penicillin') || q.includes('beta lactam') || q.includes('cephalosporin') || q.includes('amoxicillin') || q.includes('clavulanic')) {
+      topicName = 'Beta-Lactam Antibiotics & Cell Wall Inhibitors';
+      detectedCategory = 'Pharmacology';
+      answerText = `### 🦠 Beta-Lactam Antibiotics (Penicillins & Cephalosporins)
+
+#### 1. Mechanism of Action
+* **Cell Wall Transpeptidase Inhibition**: Binds to **Penicillin-Binding Proteins (PBPs)** and blocks the final transpeptidation step of bacterial peptidoglycan cell wall synthesis $\\rightarrow$ bactericidal cell lysis.
+
+#### 2. Structural SAR & Classifications
+* Core Structure: **6-Aminopenicillanic acid (6-APA)** nucleus containing a 4-membered $\\beta$-lactam ring fused to a 5-membered thiazolidine ring.
+* **$\\beta$-Lactamase Inhibitors**: Clavulanic Acid, Sulbactam, Tazobactam (Suicide inhibitors used with Amoxicillin/Piperacillin).
+
+#### 3. GPAT High-Yield Points 🎯
+* **Probenecid Interaction**: Probenecid inhibits renal tubular secretion of Penicillins, prolonging their plasma half-life.
+* **Methicillin Resistance**: MRSA alters PBP to PBP2a, conferring resistance to all $\\beta$-lactams.`;
+      relatedTopics = ['6-APA SAR & Cleavage', 'Cephalosporin Generations', 'Beta-Lactamase Suicide Inhibitors', 'Peptidoglycan Cross-linking'];
+    }
+    else if (q.includes('digoxin') || q.includes('cardiac') || q.includes('heart failure') || q.includes('glycoside') || q.includes('foxglove')) {
+      topicName = 'Cardiac Glycosides & Congestive Heart Failure';
+      detectedCategory = 'Pharmacology';
+      answerText = `### 🫀 Digoxin & Cardiac Glycosides Pharmacology
+
+#### 1. Mechanism of Action
+* **$\\text{Na}^+/\\text{K}^+$-ATPase Pump Inhibition**: Blocks the sarcolemmal $\\text{Na}^+/\\text{K}^+$-ATPase pump in cardiac myocytes $\\rightarrow$ increases intracellular $\\text{Na}^+ \\rightarrow$ reduces $\\text{Na}^+/\\text{Ca}^{2+}$ exchange $\\rightarrow$ increases intracellular $\\text{Ca}^{2+}$ storage $\\rightarrow$ **Positive Inotropic Effect**.
+
+#### 2. Narrow Therapeutic Window & Toxicity
+* Therapeutic Range: **0.5 to 2.0 ng/mL**.
+* Toxicity Symptoms: Anorexia, nausea, arrhythmia (Bigeminy), and **Xanthopsia** (yellow-green visual halos).
+* **Antidote**: **Digoxin Immune Fab (Digibind)**.
+
+#### 3. GPAT High-Yield Points 🎯
+* **Biological Source**: *Digitalis lanata* (Fam. Scrophulariaceae).
+* **Hypokalemia Effect**: Hypokalemia enhances digoxin binding and triggers severe toxicity.`;
+      relatedTopics = ['Digitalis Glycoside SAR', 'Digibind Antidote Protocol', 'Positive Inotropic Agents', 'Congestive Heart Failure Guidelines'];
+    }
+    else if (q.includes('insulin') || q.includes('diabetes') || q.includes('metformin') || q.includes('sulfonylurea') || q.includes('glimepiride')) {
+      topicName = 'Antidiabetic Agents & Insulin Pharmacotherapy';
+      detectedCategory = 'Pharmacology';
+      answerText = `### 🩸 Antidiabetic Drugs & Insulin Pharmacology
+
+#### 1. First-Line Biguanide: Metformin
+* **Mechanism**: Activates AMP-activated protein kinase (AMPK) $\\rightarrow$ reduces hepatic gluconeogenesis and improves peripheral insulin sensitivity. Does NOT cause hypoglycemia.
+* Side Effect: Lactic acidosis & Vitamin B12 deficiency.
+
+#### 2. Insulin Secretagogues: Sulfonylureas (Glimepiride, Gliclazide)
+* **Mechanism**: Blocks ATP-sensitive $K^+$ channels ($K_{\\text{ATP}}$) on pancreatic $\\beta$-cells $\\rightarrow$ cell depolarization $\\rightarrow$ $\\text{Ca}^{2+}$ influx $\\rightarrow$ exocytosis of stored insulin.
+
+#### 3. GPAT High-Yield Points 🎯
+* **Insulin Formulations**: Regular insulin is the ONLY form suitable for IV administration in Diabetic Ketoacidosis (DKA).
+* **Long-Acting Analogues**: Glargine (precipitates at physiological pH 7.4), Degludec, Detemir.`;
+      relatedTopics = ['Metformin AMPK Activation', 'Pancreatic Beta-Cell K-ATP Channel', 'Insulin Preparations Kinetics', 'SGLT-2 Inhibitors (Dapagliflozin)'];
+    }
+    else if (q.includes('hypertension') || q.includes('amlodipine') || q.includes('enalapril') || q.includes('ace inhibitor') || q.includes('beta blocker') || q.includes('atenolol')) {
+      topicName = 'Antihypertensive Agents & Cardiovascular Therapeutics';
+      detectedCategory = 'Pharmacology';
+      answerText = `### 🫀 Antihypertensive Drug Classes & Pharmacotherapy
+
+#### 1. ACE Inhibitors (Enalapril, Captopril, Lisinopril)
+* **Mechanism**: Inhibits Angiotensin-Converting Enzyme (ACE), blocking conversion of Angiotensin I to vasoconstrictor Angiotensin II.
+* Side Effect: **Dry Cough** & Angioedema due to elevated Bradykinin accumulation.
+
+#### 2. Calcium Channel Blockers (Amlodipine, Nifedipine, Diltiazem)
+* **Mechanism**: Blocks L-type voltage-gated $\\text{Ca}^{2+}$ channels in vascular smooth muscle $\\rightarrow$ arteriolar vasodilation & reduced Total Peripheral Resistance (TPR).
+
+#### 3. Beta-Blockers (Atenolol, Metoprolol, Propranolol)
+* **Mechanism**: Block $\\beta_1$-adrenergic receptors in cardiac tissue $\\rightarrow$ reduced heart rate & cardiac output, and reduced juxtaglomerular Renin secretion.`;
+      relatedTopics = ['Renin-Angiotensin-Aldosterone System (RAAS)', 'Dihydropyridine CCBs SAR', 'Beta-1 Selective Blockers (MANBATE)', 'Antihypertensive Guidelines'];
+    }
+    else if (q.includes('bcs') || q.includes('solubility') || q.includes('permeability') || q.includes('biopharmaceutics')) {
+      topicName = 'Biopharmaceutics Classification System (BCS) & Dissolution';
+      detectedCategory = 'Pharmaceutics';
+      answerText = `### 🧪 Biopharmaceutics Classification System (BCS)
+
+| Class | Aqueous Solubility | Intestinal Permeability | Rate-Limiting Step | Representative Examples |
+|-------|--------------------|------------------------|--------------------|-------------------------|
+| **Class I** | High | High | Gastric Emptying Rate | Metoprolol, Paracetamol, Propranolol |
+| **Class II** | Low | High | Dissolution Rate | Nifedipine, Carbamazepine, Glibenclamide |
+| **Class III** | High | Low | Permeation Rate | Atenolol, Cimetidine, Metformin |
+| **Class IV** | Low | Low | Overall Bioavailability | Furosemide, Hydrochlorothiazide, Paclitaxel |
+
+#### GPAT High-Yield Formula 🎯
+* **IVIVC (In-Vitro In-Vivo Correlation)**: Level A (point-to-point), Level B (statistical moment), Level C (single point correlation).`;
+      relatedTopics = ['Noyes-Whitney Dissolution Equation', 'In-Vitro In-Vivo Correlation (IVIVC)', 'Micronization & Solid Dispersions', 'Bioavailability & Bioequivalence'];
+    }
+    else if (q.includes('hplc') || q.includes('chromatography') || q.includes('uv') || q.includes('spectroscopy') || q.includes('beer') || q.includes('analysis')) {
+      topicName = 'Pharmaceutical Instrumental Analysis & Chromatography';
+      detectedCategory = 'Pharmaceutical Analysis';
+      answerText = `### 🔬 Pharmaceutical Analysis & HPLC / UV Spectroscopy
+
+#### 1. Reverse-Phase HPLC (RP-HPLC)
+* **Stationary Phase**: Non-polar ($C_{18}$ Octadecylsilane or $C_8$).
+* **Mobile Phase**: Polar (Methanol, Acetonitrile, Water/Buffer blends).
+* **Elution Order**: Polar compounds elute first; Non-polar compounds are retained longer.
+
+#### 2. UV-Visible Spectroscopy & Beer-Lambert Law
+$$A = \\log\\left(\\frac{I_0}{I}\\right) = \\epsilon \\cdot c \\cdot l$$
+* $A$ = Absorbance, $\\epsilon$ = Molar absorptivity ($L\\cdot mol^{-1}\\cdot cm^{-1}$), $c$ = Concentration ($mol/L$), $l$ = Path length ($cm$).
+* **Auxochrome vs Chromophore**: Chromophore absorbs UV light; Auxochrome shifts $\\lambda_{\\text{max}}$ to longer wavelengths (Bathochromic shift).`;
+      relatedTopics = ['RP-HPLC Mobile & Stationary Phases', 'Beer-Lambert Law Deviations', 'IR Spectroscopy Fingerprint Region', 'NMR Chemical Shift TMS Standard'];
+    }
+    else if (q.includes('alkaloid') || q.includes('mayer') || q.includes('dragendorff') || q.includes('pharmacognosy') || q.includes('glycoside')) {
+      topicName = 'Pharmacognosy - Alkaloids, Glycosides & Phytochemical Tests';
+      detectedCategory = 'Pharmacognosy';
+      answerText = `### 🌿 Pharmacognosy & Qualitative Chemical Identification Tests
+
+#### 1. Alkaloid Qualitative Reagents (GPAT High-Yield Mnemonic)
+* **Mayer's Reagent** (Potassium Mercuric Iodide) $\\rightarrow$ **Cream / Off-white Precipitate**.
+* **Dragendorff's Reagent** (Potassium Bismuth Iodide) $\\rightarrow$ **Orange-Red Precipitate**.
+* **Wagner's Reagent** (Iodine in Potassium Iodide) $\\rightarrow$ **Reddish-Brown Precipitate**.
+* **Hager's Reagent** (Saturated Picric Acid) $\\rightarrow$ **Yellow Crystalline Precipitate**.
+
+#### 2. Glycoside Identification Tests
+* **Cardiac Glycosides**: Keller-Kiliani test (for digitoxose sugar) $\\rightarrow$ Reddish-brown turning to blue-green ring.
+* **Anthraquinone Glycosides**: Borntrager's test $\\rightarrow$ Pink / Red color in ammoniacal layer.`;
+      relatedTopics = ['Alkaloid Qualitative Chemical Tests', 'Cardiac Glycoside Sugar Tests', 'Volatile Oils Distillation Methods', 'Tropane Alkaloids Biosynthesis'];
+    }
+    else if (q.includes('schedule') || q.includes('gmp') || q.includes('jurisprudence') || q.includes('d&c act') || q.includes('pharmacy act')) {
+      topicName = 'Pharmaceutical Jurisprudence & D&C Act Schedules';
+      detectedCategory = 'Jurisprudence';
+      answerText = `### ⚖️ Pharmaceutical Jurisprudence & Official D&C Act Schedules
+
+* 🏭 **Schedule M**: Good Manufacturing Practices (GMP) and factory premises requirements for pharmaceutical manufacturing.
+* 💊 **Schedule H**: Prescription drugs to be sold only on prescription of a Registered Medical Practitioner (RMP).
+* 🚫 **Schedule X**: Psychotropic & Narcotic drugs requiring duplicate prescription copies & 2-year record preservation.
+* 🔬 **Schedule C & C1**: Biological & special products (Vaccines, Sera, Insulin, Antibiotics).
+* 📋 **Schedule Y**: Requirements and guidelines for clinical trials and new drug approval.
+* 🏷️ **Schedule G**: Medicines to be taken strictly under medical supervision (e.g. Metformin, Glibenclamide).`;
+      relatedTopics = ['Schedule M Factory Premises GMP', 'Schedule X Narcotic Record Rules', 'Drugs & Magic Remedies Act', 'PCI Pharmacy Education Regulations'];
+    }
     else if (q.includes('noyes') || q.includes('dissolution') || q.includes('sink') || q.includes('fick')) {
       topicName = 'Noyes-Whitney Dissolution Rate Equation & Physical Pharmaceutics';
       detectedCategory = 'Pharmaceutics';
@@ -135,11 +264,7 @@ $$\\frac{dC}{dt} = \\frac{D \\cdot S}{h} (C_s - C_b)$$
 #### 2. Sink Conditions Definition
 * **Sink Condition** is maintained when the drug concentration in bulk solution ($C_b$) does NOT exceed **10% to 15%** of its saturation solubility ($C_s$).
 * Under sink conditions, $C_b \\approx 0$, simplifying the equation to:
-$$\\frac{dC}{dt} = \\frac{D \\cdot S \\cdot C_s}{h}$$
-
-#### 3. GPAT High-Yield Exam Tips 🎯
-* Micronization of poorly soluble drugs increases surface area ($S$), thereby enhancing dissolution rate $dC/dt$.
-* Agitation / stirring reduces stagnant layer thickness ($h$), increasing dissolution rate.`;
+$$\\frac{dC}{dt} = \\frac{D \\cdot S \\cdot C_s}{h}$$`;
       relatedTopics = ['Hixson-Crowell Cube Root Law', 'BCS Biopharmaceutics Classification', 'Micronization & Particle Size', 'Sink Conditions Criteria'];
     }
     else if (q.includes('young') || q.includes('dilling') || q.includes('pediatric') || q.includes('dose') || q.includes('calculation')) {
@@ -161,19 +286,37 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
       relatedTopics = ['Body Surface Area (BSA) Mosteller Formula', 'Clark\'s Weight Rule', 'Infant Fried\'s Formula', 'Posology Factors'];
     }
     else {
-      topicName = `Clinical Analysis: ${query.slice(0, 40)}`;
-      answerText = `### 🔬 Clinical Pharmacology & Pharmaceutical Analysis
+      // Dynamic Smart Synthesizer for ANY custom prompt
+      const words = q.split(/\s+/).filter(w => w.length > 2);
+      const mainSubject = words.length > 0 ? words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : query;
+      
+      topicName = `PharmaVerse AI Analysis: ${mainSubject.slice(0, 45)}`;
+      detectedCategory = category && category !== 'All' ? category : 'Pharmacology & Therapeutics';
+      
+      answerText = `### 🎓 Comprehensive Academic Monograph: **"${mainSubject}"**
 
-#### 1. Core Principles & Receptor Target
-* **Biological Target**: Active principle of **"${query}"** interacts with target G-Protein Coupled Receptors (GPCRs), ion channels, or specific cellular enzymes.
-* **Pharmacokinetics (ADME)**: Rapid gastrointestinal absorption, high systemic bioavailability, hepatic biotransformation via CYP450 enzymes, and renal/biliary elimination.
+#### 1. 📖 Core Definition & Scientific Fundamentals
+* **Primary Concept**: In B.Pharmacy, Pharm.D, and PCI syllabus, **${mainSubject}** represents a fundamental topic in **${detectedCategory}**.
+* **Physicochemical & Biological Profile**: Understanding how structural properties (molecular weight, $\\log P$, $pK_a$, solubility) govern absorption, cellular receptor interaction, and biological response.
 
-#### 2. Clinical Therapeutics & Dosing Guidelines
-* **Standard Dosage**: Dosed according to official IP, BP, and USP pharmacopoeial standards.
-* **Special Precautions**: Dose adjustment required in renal impairment (eGFR < 30 mL/min) or severe hepatic impairment.
+#### 2. 🔬 Mechanism of Action & Scientific Principles
+* **Target Binding & Kinetics**: Interacts with target receptors, cellular ion channels, or metabolic enzymes to exert therapeutic or formulation effects.
+* **Pharmacokinetics (ADME)**: Evaluates hepatic CYP450 biotransformation, plasma protein binding, volume of distribution ($V_d$), and clearance rate.
 
-#### 3. GPAT Competitive Exam Note 🎯
-* Master structure-activity relationships (SAR), heterocyclic ring classification, active metabolic pathways, and pharmacopoeial assay procedures for high-yield scoring.`;
+#### 3. 🎯 High-Yield GPAT & NIPER Exam Flashcards
+* **Flash Note 1**: Correlate **${mainSubject}** with official IP/BP pharmacopoeial assay methods and analytical standards.
+* **Flash Note 2**: Practice solving numerical MCQs, rate equations, and structural SAR questions related to this topic.
+* **Flash Note 3**: Note key contraindications, drug-drug interactions, and regulatory schedule classifications.
+
+---
+*💡 Tip: To get live real-time AI responses generated by Google Gemini 1.5 Flash AI, click **"Configure Gemini AI Key"** in the top control bar and save your free Gemini API key!*`;
+
+      relatedTopics = [
+        `Mechanism of Action of ${mainSubject.slice(0, 20)}`,
+        `GPAT Exam Notes on ${mainSubject.slice(0, 20)}`,
+        `Structure Activity Relationship (SAR)`,
+        `Pharmacopoeial Assay Procedures`
+      ];
     }
 
     return {
@@ -181,6 +324,7 @@ $$\\text{Child Dose} = \\left( \\frac{\\text{Weight in Lbs}}{150} \\right) \\tim
       sender: 'ai',
       text: answerText,
       topic: topicName,
+      source: geminiApiKey ? 'Google Gemini AI' : 'PharmaVerse Clinical AI Engine',
       relatedTopics,
       category: detectedCategory,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })

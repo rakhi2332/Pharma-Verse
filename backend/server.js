@@ -7,6 +7,9 @@ dotenv.config();
 
 const app = express();
 
+// Disable Mongoose command buffering in serverless/offline environments
+mongoose.set('bufferCommands', false);
+
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));

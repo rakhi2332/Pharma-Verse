@@ -55,7 +55,7 @@ export default function Register() {
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
     axios.post(`${API_URL}/auth/register`, { name, email, password }, { timeout: 1000 }).catch(() => {});
 
-    navigate('/dashboard');
+    navigate('/semesters');
   };
 
   return (
@@ -148,7 +148,7 @@ export default function Register() {
             disabled={loading}
             className="w-full py-3.5 bg-primary hover:bg-blue-600 text-white font-bold text-sm rounded-xl shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 mt-2"
           >
-            <span>Create Account & Go to Dashboard</span>
+            <span>Create Account</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>

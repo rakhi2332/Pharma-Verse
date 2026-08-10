@@ -124,9 +124,6 @@ export default function Navbar() {
 
       {/* Nav Links */}
       <div className="hidden lg:flex items-center gap-5 text-slate-600 dark:text-slate-300 font-medium text-xs sm:text-sm">
-        <Link to="/dashboard" className="text-blue-600 dark:text-blue-400 font-bold hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex items-center gap-1">
-          <BookOpen className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" /> Dashboard
-        </Link>
         <Link to="/semesters" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-semibold">Semesters</Link>
         <Link to="/study-planner" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Planner</Link>
         <Link to="/medicine-scanner" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Scanner</Link>
@@ -135,7 +132,7 @@ export default function Navbar() {
         </Link>
       </div>
 
-      {/* Theme Toggle, Music Player & Auth Buttons */}
+      {/* Theme Toggle & Auth Buttons */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         <button
           onClick={toggleTheme}
@@ -144,9 +141,11 @@ export default function Navbar() {
         >
           {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
         </button>
-        <RelaxationMusicPlayer />
-        <Link to="/dashboard" className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs sm:text-sm rounded-full hover:from-blue-500 hover:to-indigo-500 shadow-md shadow-blue-500/25 transition-all hover:scale-105 active:scale-95 cursor-pointer">
-          My Dashboard
+        <Link to="/login" className="px-3.5 py-1.5 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+          Login
+        </Link>
+        <Link to="/register" className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs sm:text-sm rounded-full hover:from-blue-500 hover:to-indigo-500 shadow-md shadow-blue-500/25 transition-all hover:scale-105 active:scale-95 cursor-pointer">
+          Sign Up
         </Link>
       </div>
     </nav>

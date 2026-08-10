@@ -16,6 +16,7 @@ import {
   Moon
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import RelaxationMusicPlayer from '../components/RelaxationMusicPlayer';
 
 export default function Landing() {
   const { theme, toggleTheme } = useTheme();
@@ -48,8 +49,8 @@ export default function Landing() {
           <Link to="/gpat" className="hover:text-primary transition-colors">GPAT Prep</Link>
         </div>
 
-        {/* Theme Toggle Button */}
-        <div className="flex items-center gap-3">
+        {/* Theme Toggle, Relaxation Music & Auth Buttons */}
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={toggleTheme}
             title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
@@ -57,6 +58,13 @@ export default function Landing() {
           >
             {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
           </button>
+          <RelaxationMusicPlayer />
+          <Link to="/login" className="px-3.5 py-1.5 text-xs sm:text-sm font-bold text-text-muted hover:text-primary transition-colors">
+            Login
+          </Link>
+          <Link to="/register" className="px-4 py-2 bg-primary hover:bg-primary-hover text-white font-bold text-xs sm:text-sm rounded-full shadow-md shadow-primary/25 transition-all hover:scale-105 active:scale-95 cursor-pointer">
+            Sign Up
+          </Link>
         </div>
       </nav>
 

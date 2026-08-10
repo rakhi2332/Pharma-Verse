@@ -1,14 +1,18 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Content = require('../models/Content');
 
 // Get content by subject
 router.get('/subject/:subjectId', async (req, res) => {
   try {
-    const content = await Content.find({ subject: req.params.subjectId });
-    res.json(content);
+    if (mongoose.connection.readyState === 1) {
+      const content = await Content.find({ subject: req.params.subjectId });
+      return res.json(content);
+    }
+    return res.json([]);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.json([]);
   }
 });
 
