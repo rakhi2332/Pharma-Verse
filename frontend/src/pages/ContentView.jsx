@@ -277,12 +277,61 @@ const HAP1_UNIT1_FULL_NOTES = {
 };
 
 
+const PCI_SUBJECT_DICTIONARY = {
+  'bp101t': { _id: 'bp101t', code: 'BP101T', name: 'Human Anatomy and Physiology I', description: 'Cell, tissues, skeletal system, joints, blood, lymphatic & nervous system.' },
+  'bp102t': { _id: 'bp102t', code: 'BP102T', name: 'Pharmaceutical Analysis I', description: 'Volumetric analysis, acid-base, non-aqueous, complexometry & redox titrations.' },
+  'bp103t': { _id: 'bp103t', code: 'BP103T', name: 'Pharmaceutics I', description: 'History of pharmacy, dosage forms, posology, liquid & semisolid formulations.' },
+  'bp104t': { _id: 'bp104t', code: 'BP104T', name: 'Pharmaceutical Inorganic Chemistry', description: 'Impurities, gastrointestinal agents, topical agents, dental products & radiopharmaceuticals.' },
+  'bp201t': { _id: 'bp201t', code: 'BP201T', name: 'Human Anatomy and Physiology II', description: 'Nervous system, digestive system, respiratory, endocrine, urinary & reproductive systems.' },
+  'bp202t': { _id: 'bp202t', code: 'BP202T', name: 'Pharmaceutical Organic Chemistry I', description: 'Isomerism, alkanes, alkenes, conjugated dienes, alkyl halides, alcohols, carbonyls & carboxylic acids.' },
+  'bp203t': { _id: 'bp203t', code: 'BP203T', name: 'Biochemistry', description: 'Biomolecules, bioenergetics, carbohydrate, lipid, amino acid metabolism & nucleic acids.' },
+  'bp204t': { _id: 'bp204t', code: 'BP204T', name: 'Pathophysiology', description: 'Mechanisms of cell injury, inflammation, cardiovascular, endocrine, respiratory & renal diseases.' },
+  'bp301t': { _id: 'bp301t', code: 'BP301T', name: 'Pharmaceutical Organic Chemistry II', description: 'Benzene & derivatives, aromatic amines, fats & oils, polynuclear hydrocarbons & cycloalkanes.' },
+  'bp302t': { _id: 'bp302t', code: 'BP302T', name: 'Physical Pharmaceutics I', description: 'Solubility of drugs, states of matter, surface & interfacial tension, complexation & buffers.' },
+  'bp303t': { _id: 'bp303t', code: 'BP303T', name: 'Pharmaceutical Microbiology', description: 'Morphology of bacteria & fungi, staining, sterilization, disinfectant evaluation & aseptic area.' },
+  'bp304t': { _id: 'bp304t', code: 'BP304T', name: 'Pharmaceutical Engineering', description: 'Fluid flow, size reduction, filtration, evaporation, distillation, drying & mixing.' },
+  'bp401t': { _id: 'bp401t', code: 'BP401T', name: 'Pharmaceutical Organic Chemistry III', description: 'Stereoisomerism, optical activity, geometrical isomerism, heterocyclic chemistry & reactions.' },
+  'bp402t': { _id: 'bp402t', code: 'BP402T', name: 'Medicinal Chemistry I', description: 'Physicochemical parameters, ANS agents, sedatives, hypnotics, NSAIDs & anesthetics.' },
+  'bp403t': { _id: 'bp403t', code: 'BP403T', name: 'Physical Pharmaceutics II', description: 'Colloidal dispersions, rheology, coarse dispersions (suspensions/emulsions) & micromeritics.' },
+  'bp404t': { _id: 'bp404t', code: 'BP404T', name: 'Pharmacology I', description: 'General pharmacology principles, ADME pharmacokinetics, pharmacodynamics & ANS drugs.' },
+  'bp405t': { _id: 'bp405t', code: 'BP405T', name: 'Pharmacognosy and Phytochemistry I', description: 'Cultivation, collection, classification of crude drugs, plant tissue culture & metabolites.' },
+  'bp501t': { _id: 'bp501t', code: 'BP501T', name: 'Medicinal Chemistry II', description: 'Antihistamines, antineoplastic, cardiovascular drugs, antianginal, antiarrhythmics & diuretics.' },
+  'bp502t': { _id: 'bp502t', code: 'BP502T', name: 'Industrial Pharmacy I', description: 'Preformulation, tablets, liquid dosage forms, capsules, parenterals & ophthalmic preparations.' },
+  'bp503t': { _id: 'bp503t', code: 'BP503T', name: 'Pharmacology II', description: 'Cardiovascular drugs, autacoids, endocrine pharmacology, oral hypoglycemics & bioassays.' },
+  'bp504t': { _id: 'bp504t', code: 'BP504T', name: 'Pharmacognosy and Phytochemistry II', description: 'Metabolic pathways (shikimic/acetate), isolation & identification of alkaloids, steroids & glycosides.' },
+  'bp505t': { _id: 'bp505t', code: 'BP505T', name: 'Pharmaceutical Jurisprudence', description: 'Drugs and Cosmetics Act 1940, Pharmacy Act, Narcotic Drugs Act, Medicinal & Toilet Preparations Act.' },
+  'bp601t': { _id: 'bp601t', code: 'BP601T', name: 'Medicinal Chemistry III', description: 'Beta-lactam antibiotics, macrolides, quinolones, antimalarials, antitubercular & SAR of anti-infectives.' },
+  'bp602t': { _id: 'bp602t', code: 'BP606T', name: 'Pharmacology III', description: 'Chemotherapy of infectious diseases, cancer chemotherapy, immunopharmacology & toxicology.' },
+  'bp603t': { _id: 'bp603t', code: 'BP603T', name: 'Herbal Drug Technology', description: 'Herbal medicine, nutraceuticals, herbal cosmetics, WHO guidelines & patenting.' },
+  'bp604t': { _id: 'bp604t', code: 'BP604T', name: 'Biopharmaceutics and Pharmacokinetics', description: 'Absorption, distribution, elimination kinetics, compartment models & bioequivalence.' },
+  'bp605t': { _id: 'bp605t', code: 'BP605T', name: 'Pharmaceutical Biotechnology', description: 'Recombinant DNA technology, monoclonal antibodies, enzyme immobilization & vaccines.' },
+  'bp606t': { _id: 'bp606t', code: 'BP606T', name: 'Pharmaceutical Quality Assurance', description: 'cGMP principles, GLP, ISO 9000 quality management, ICH guidelines & validation.' },
+  'bp701t': { _id: 'bp701t', code: 'BP701T', name: 'Instrumental Methods of Analysis', description: 'UV-Visible spectroscopy, IR, NMR, Mass spectrometry, Fluorimetry, HPLC, GC & TLC.' },
+  'bp702t': { _id: 'bp702t', code: 'BP702T', name: 'Industrial Pharmacy II', description: 'Pilot plant scale-up, technology transfer, SUPAC guidelines, regulatory affairs & ISO 14000.' },
+  'bp703t': { _id: 'bp703t', code: 'BP703T', name: 'Pharmacy Practice', description: 'Hospital pharmacy, community pharmacy, ADR monitoring, patient counseling & TDM.' },
+  'bp704t': { _id: 'bp704t', code: 'BP704T', name: 'Novel Drug Delivery Systems (NDDS)', description: 'Controlled release polymers, microencapsulation, liposomes, niosomes & transdermal patches.' },
+  'bp801t': { _id: 'bp801t', code: 'BP801T', name: 'Biostatistics and Research Methodology', description: 'Parametric & non-parametric tests, t-test, ANOVA, Chi-square, regression & DOE.' },
+  'bp802t': { _id: 'bp802t', code: 'BP802T', name: 'Social and Preventive Pharmacy', description: 'Public health programs, WHO disease prevention, nutrition, hygiene & maternal health.' },
+  'bp803et': { _id: 'bp803et', code: 'BP803ET', name: 'Pharmaceutical Marketing Management', description: 'Pharma market analysis, product management, pricing policies & sales force.' },
+  'bp804et': { _id: 'bp804et', code: 'BP804ET', name: 'Pharmaceutical Regulatory Science', description: 'USFDA, EMA, CDSCO regulatory approval process, IND, NDA, ANDA filings & Orange Book.' }
+};
+
 export default function ContentView() {
   const { subjectId } = useParams();
+
+  // Instant zero-delay initial subject resolution
+  const initialSubjectKey = String(subjectId || 'bp101t').toLowerCase();
+  const initialMatchedSubject = PCI_SUBJECT_DICTIONARY[initialSubjectKey] || {
+    _id: subjectId,
+    name: 'Human Anatomy and Physiology I',
+    code: 'BP101T',
+    description: 'Study of structural and functional organization of human cell, tissues, skeletal system & nervous system.'
+  };
+
   const [content, setContent] = useState([]);
-  const [subject, setSubject] = useState(null);
+  const [subject, setSubject] = useState(initialMatchedSubject);
   const [semester, setSemester] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('syllabus'); // 'syllabus' | 'videos'
   const [expandedUnit, setExpandedUnit] = useState(null);
@@ -305,85 +354,32 @@ export default function ContentView() {
   const [showPharmaceuticsUnit4PdfViewer, setShowPharmaceuticsUnit4PdfViewer] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [contentRes, subjectRes] = await Promise.all([
-          axios.get(`${API_BASE_URL}/content/subject/${subjectId}`).catch(() => ({ data: [] })),
-          axios.get(`${API_BASE_URL}/subjects/${subjectId}`).catch(() => null)
-        ]);
-
-        setContent(contentRes.data || []);
-
-        if (subjectRes?.data) {
-          setSubject(subjectRes.data);
-          if (subjectRes.data.semester) {
-            const semRes = await axios.get(`${API_BASE_URL}/semesters/${subjectRes.data.semester}`).catch(() => null);
-            if (semRes?.data) setSemester(semRes.data);
-          }
-        } else {
-          // Fallback search across all semesters
-          const semestersRes = await axios.get(`${API_BASE_URL}/semesters`).catch(() => ({ data: [] }));
-          const allSemesters = semestersRes.data || [];
-
-          for (const sem of allSemesters) {
-            const subjectsRes = await axios.get(`${API_BASE_URL}/subjects/semester/${sem._id}`).catch(() => ({ data: [] }));
-            const found = (subjectsRes.data || []).find(s => s._id === subjectId);
-            if (found) {
-              setSubject(found);
-              setSemester(sem);
-              break;
-            }
-          }
-        }
-
-        // Ensure subject is never null with smart fallback matching
-        setSubject(prev => {
-          if (prev) return prev;
-          if (subjectId?.includes('pharma') || subjectId?.includes('BP103T')) {
-            return {
-              _id: subjectId,
-              name: 'Pharmaceutics I',
-              code: 'BP103T',
-              description: 'History of pharmacy, pharmacopoeias, dosage forms, posology, calculations, monophasic/biphasic liquids & semisolids.'
-            };
-          }
-          if (subjectId?.includes('analysis') || subjectId?.includes('BP102T')) {
-            return {
-              _id: subjectId,
-              name: 'Pharmaceutical Analysis I',
-              code: 'BP102T',
-              description: 'Volumetric analysis, acid-base, non-aqueous, precipitation, complexometric & redox titrations.'
-            };
-          }
-          return {
-            _id: subjectId,
-            name: 'Human Anatomy and Physiology I',
-            code: 'BP101T',
-            description: 'Study of structural and functional organization of human cell, tissues, skeletal system, joints, blood & nervous system.'
-          };
-        });
-
-        // Auto open PDF if requested in URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const pNum = urlParams.get('pdf') || urlParams.get('unit');
-        if (pNum === '2') setShowUnit2PdfViewer(true);
-        else if (pNum === '3') setShowUnit3PdfViewer(true);
-        else if (pNum === '4') setShowUnit4PdfViewer(true);
-        else if (pNum === '5') setShowUnit5PdfViewer(true);
-        else if (urlParams.get('openPdf') === 'true' || pNum === '1') setShowOriginalPdfViewer(true);
-      } catch (err) {
-        console.error(err);
-        setSubject({
-          _id: subjectId,
-          name: 'Human Anatomy and Physiology I',
-          code: 'BP101T',
-          description: 'Study of structural and functional organization of human cell, tissues, skeletal system, joints, blood & nervous system.'
-        });
-      } finally {
-        setLoading(false);
-      }
+    const key = String(subjectId || 'bp101t').toLowerCase();
+    const matched = PCI_SUBJECT_DICTIONARY[key] || {
+      _id: subjectId,
+      name: 'Human Anatomy and Physiology I',
+      code: 'BP101T',
+      description: 'Study of structural and functional organization of human cell, tissues, skeletal system & nervous system.'
     };
-    fetchData();
+
+    setSubject(matched);
+    setLoading(false);
+
+    // Auto open PDF if requested in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const pNum = urlParams.get('pdf') || urlParams.get('unit');
+    if (pNum === '2') setShowUnit2PdfViewer(true);
+    else if (pNum === '3') setShowUnit3PdfViewer(true);
+    else if (pNum === '4') setShowUnit4PdfViewer(true);
+    else if (pNum === '5') setShowUnit5PdfViewer(true);
+    else if (urlParams.get('openPdf') === 'true' || pNum === '1') setShowOriginalPdfViewer(true);
+
+    // Background sync if API available
+    axios.get(`${API_BASE_URL}/content/subject/${subjectId}`, { timeout: 1500 })
+      .then(res => {
+        if (res.data) setContent(res.data);
+      })
+      .catch(() => {});
   }, [subjectId]);
 
   // Guaranteed 5-Unit PCI Syllabus Generator Fallback for All Subjects
