@@ -44,8 +44,9 @@ export default function Landing() {
         </div>
 
         <div className="flex gap-3 items-center">
-          <Link to="/login" className="px-4 py-2 text-sm font-medium text-text-main hover:text-primary transition-colors">Log In</Link>
-          <Link to="/register" className="px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-full hover:bg-primary-hover shadow-lg shadow-primary/30 transition-all hover:scale-105 active:scale-95">Get Started</Link>
+          <Link to="/dashboard" className="px-5 py-2.5 bg-primary text-white text-sm font-bold rounded-full hover:bg-primary-hover shadow-lg shadow-primary/30 transition-all hover:scale-105 active:scale-95 cursor-pointer">
+            Go to Student Dashboard
+          </Link>
         </div>
       </nav>
 

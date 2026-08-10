@@ -128,6 +128,9 @@ export default function Navbar() {
 
       {/* Nav Links */}
       <div className="hidden lg:flex items-center gap-5 text-slate-600 font-medium text-xs sm:text-sm">
+        <Link to="/dashboard" className="text-blue-600 font-bold hover:text-blue-700 transition-colors flex items-center gap-1">
+          <BookOpen className="w-3.5 h-3.5 text-blue-600" /> Dashboard
+        </Link>
         <Link to="/semesters" className="hover:text-blue-600 transition-colors font-semibold">Semesters</Link>
         <Link to="/study-planner" className="hover:text-blue-600 transition-colors">Planner</Link>
         <Link to="/medicine-scanner" className="hover:text-blue-600 transition-colors">Scanner</Link>
@@ -139,8 +142,9 @@ export default function Navbar() {
       {/* Global Relaxation Music Player & Auth Buttons */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         <RelaxationMusicPlayer />
-        <Link to="/login" className="px-3 sm:px-4 py-2 font-semibold text-slate-700 hover:text-blue-600 text-xs sm:text-sm transition-colors">Log In</Link>
-        <Link to="/register" className="px-4 sm:px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs sm:text-sm rounded-full hover:from-blue-500 hover:to-indigo-500 shadow-md shadow-blue-500/25 transition-all hover:scale-105 active:scale-95">Get Started</Link>
+        <Link to="/dashboard" className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs sm:text-sm rounded-full hover:from-blue-500 hover:to-indigo-500 shadow-md shadow-blue-500/25 transition-all hover:scale-105 active:scale-95 cursor-pointer">
+          My Dashboard
+        </Link>
       </div>
     </nav>
   );
