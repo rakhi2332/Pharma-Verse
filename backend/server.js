@@ -38,48 +38,34 @@ app.use('/api/medicine-scanner', medicineScannerRoutes);
 app.use('/api/pill-scanner', medicineScannerRoutes);
 app.use('/api/study-planner', studyPlannerRoutes);
 
-// Basic Route for testing
+// Basic Route for health check
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'PharmaVerse API is running' });
 });
 
 const Semester = require('./models/Semester');
-const { seedPciSyllabus } = require('./seed');
 
 // Database connection & Server initialization
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/pharmaverse';
+const MONGO_URI = process.env.MONGO_URI;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Only listen if executed directly
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
 
 async function connectDB() {
+  if (!MONGO_URI) {
+    console.log('No MONGO_URI provided. Server operating in standalone mode.');
+    return;
+  }
   try {
-    await mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 3000 });
+    await mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 2000 });
     console.log('Connected to MongoDB');
   } catch (err) {
-    console.error('Failed to connect to local MongoDB. Initializing In-Memory MongoDB...', err.message);
-    try {
-      const { MongoMemoryServer } = require('mongodb-memory-server');
-      const mongoServer = await MongoMemoryServer.create();
-      const inMemoryUri = mongoServer.getUri();
-      await mongoose.connect(inMemoryUri);
-      console.log('Connected to In-Memory MongoDB successfully!');
-    } catch (memErr) {
-      console.error('Failed to start In-Memory MongoDB:', memErr.message);
-      return;
-    }
-  }
-
-  try {
-    const count = await Semester.countDocuments();
-    if (count === 0) {
-      console.log('Database empty. Seeding official PCI syllabus automatically...');
-      await seedPciSyllabus(true);
-    }
-  } catch (seedErr) {
-    console.error('Auto-seed check failed:', seedErr.message);
+    console.error('Failed to connect to MongoDB:', err.message);
   }
 }
 
