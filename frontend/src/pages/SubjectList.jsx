@@ -114,38 +114,31 @@ const PCI_SEMESTER_SUBJECTS = {
 
 export default function SubjectList() {
   const { semesterId } = useParams();
-  const [subjects, setSubjects] = useState([]);
-  const [semester, setSemester] = useState(null);
-  const [loading, setLoading] = useState(true);
+
+  // Instant zero-delay initial state calculation
+  const initialCleanNum = parseInt(String(semesterId || '1').replace(/\D/g, '')) || 1;
+  const initialData = PCI_SEMESTER_SUBJECTS[initialCleanNum] || PCI_SEMESTER_SUBJECTS[1];
+
+  const [subjects, setSubjects] = useState(initialData.subjects);
+  const [semester, setSemester] = useState(initialData.semester);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [subjectsRes, semesterRes] = await Promise.all([
-          axios.get(`${API_BASE_URL}/subjects/semester/${semesterId}`, { timeout: 4000 }).catch(() => null),
-          axios.get(`${API_BASE_URL}/semesters/${semesterId}`, { timeout: 4000 }).catch(() => null)
-        ]);
+    const cleanNum = parseInt(String(semesterId).replace(/\D/g, '')) || 1;
+    const matchedData = PCI_SEMESTER_SUBJECTS[cleanNum] || PCI_SEMESTER_SUBJECTS[1];
+    setSemester(matchedData.semester);
+    setSubjects(matchedData.subjects);
+    setLoading(false);
 
-        if (subjectsRes?.data && subjectsRes.data.length > 0) {
-          setSubjects(subjectsRes.data);
-          if (semesterRes?.data) setSemester(semesterRes.data);
-          setLoading(false);
-          return;
+    // Silent background sync if backend available
+    axios.get(`${API_BASE_URL}/subjects/semester/${semesterId}`, { timeout: 1500 })
+      .then(res => {
+        if (res.data && res.data.length > 0) {
+          setSubjects(res.data);
         }
-      } catch (err) {
-        console.warn('Backend API disconnected. Using offline PCI Subjects fallback.');
-      }
-
-      // Clean semester index (extract 1-8 from semesterId e.g. 'sem-1', '1', 'sem-4')
-      const cleanNum = parseInt(String(semesterId).replace(/\D/g, '')) || 1;
-      const matchedData = PCI_SEMESTER_SUBJECTS[cleanNum] || PCI_SEMESTER_SUBJECTS[1];
-
-      setSemester(matchedData.semester);
-      setSubjects(matchedData.subjects);
-      setLoading(false);
-    };
-    fetchData();
+      })
+      .catch(() => {});
   }, [semesterId]);
 
   const semNum = semester?.semesterNumber || (parseInt(String(semesterId).replace(/\D/g, '')) || 1);
